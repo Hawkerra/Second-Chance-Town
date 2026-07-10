@@ -43,6 +43,7 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
     // Local state for editable fields
     const [editedActor, setEditedActor] = useState<{
         name: string;
+        homeworld: string;
         profile: string;
         characterArc: string;
         style: string;
@@ -52,6 +53,7 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
         locationId: string;
     }>({
         name: actor.name,
+        homeworld: actor.homeworld || '',
         profile: actor.profile,
         characterArc: actor.characterArc || '',
         style: actor.style,
@@ -226,6 +228,7 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
 
         // Update the actor in the save
         actor.name = editedActor.name;
+        actor.homeworld = editedActor.homeworld;
         actor.profile = editedActor.profile;
         actor.characterArc = editedActor.characterArc;
         actor.style = editedActor.style;
@@ -814,6 +817,38 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
                                                 </option>
                                             ))}
                                         </select>
+                                    </div>
+
+                                    {/* World of Origin */}
+                                    <div>
+                                        <label 
+                                            style={{
+                                                display: 'block',
+                                                color: '#b066ff',
+                                                fontSize: '14px',
+                                                fontWeight: 'bold',
+                                                marginBottom: '8px',
+                                            }}
+                                        >
+                                            World of Origin (required)
+                                        </label>
+                                        <textarea
+                                            value={editedActor.homeworld}
+                                            onChange={(e) => handleInputChange('homeworld', e.target.value)}
+                                            placeholder="Name the origin setting (or 'Original'), plus a brief synopsis of that world"
+                                            style={{
+                                                width: '100%',
+                                                minHeight: '80px',
+                                                padding: '12px',
+                                                fontSize: '14px',
+                                                backgroundColor: 'rgba(18, 8, 32, 0.6)',
+                                                border: editedActor.homeworld.trim() ? '2px solid rgba(176, 102, 255, 0.3)' : '2px solid rgba(255, 120, 120, 0.55)',
+                                                borderRadius: '5px',
+                                                color: '#e0f0ff',
+                                                fontFamily: 'inherit',
+                                                resize: 'vertical',
+                                            }}
+                                        />
                                     </div>
 
                                     {/* Profile/Personality */}

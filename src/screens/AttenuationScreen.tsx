@@ -159,7 +159,7 @@ export const AttenuationScreen: FC<AttenuationScreenProps> = ({stage, setScreenT
 							fontWeight: 700
 						}}
 					>
-						Arcane Focus
+						Wishing Well
 					</Typography>
 
 					<Typography 
@@ -170,7 +170,7 @@ export const AttenuationScreen: FC<AttenuationScreenProps> = ({stage, setScreenT
 							textAlign: 'center'
 						}}
 					>
-						Wish for specific people, or shape the traits of the applicants the Well hears.
+						Wish for specific people, or shape the traits of the applicants whose wishes find their way to town.
 					</Typography>
 
 					<Box sx={{ display: 'flex', flexDirection: 'column', gap: isVerticalLayout ? 2 : 2.5 }}>

@@ -28,8 +28,8 @@ tags:
 creator_notes: "
 <div class=\"sct-section\">
   <h3>📋 Game Overview</h3>
-  <p>You are the Founder of a young frontier town on the edge of the Crossroads - a realm between realms, where the roads of countless worlds meet. Beneath your town square sits a Wishing Well, tapping the deep current that runs between realities. That current carries wishes. Anyone, in any world, who truly and sincerely longs for a new life may find their wish heard - and their application for residency delivered to your desk.</p>
-  <p>No one arrives here who does not want to be here, and the road home is always open. Your task is simpler and warmer than saving the world: review applications, welcome newcomers, raise buildings, assign roles, and help a town full of people from every walk of every world build their second chance.</p>
+  <p>You are the Founder of a young frontier town on the edge of the Crossroads - a realm between realms, where the roads of countless worlds meet. In your town square stands the Wishing Well - to every eye an ordinary old stone well, though local lore credits it for what happens next. Anyone, in any world, who truly and sincerely longs for a new life may find their wish heard - and their application for residency delivered to your desk.</p>
+  <p>No one arrives here who does not want to be here - new residents step through the Arrivals Hall's grand double doors at the exact moment they fully commit to a fresh start - and the road home is always open. Your task is simpler and warmer than saving the world: review applications, welcome newcomers, raise buildings, assign roles, and help a town full of people from every walk of every world build their second chance.</p>
   <p>Each playthrough is unique, with characters and neighboring communities procedurally loaded from Chub's extensive library, ensuring no two towns are alike.</p>
   <p><em>A cozy rework of Lord Raven's Post-Apocalypse Rehabilitation Center, by way of The Spire, made with his blessing.</em></p>
 </div>
@@ -40,6 +40,7 @@ creator_notes: "
     <li><strong>Volunteers Only:</strong> Every resident chose this - some knowingly, some through a wish they barely dared to speak. Approve or decline applications, or cast a wish of your own for exactly the sort of person you hope applies.</li>
     <li><strong>Generative Content:</strong> Leverages Chub's generative endpoints to create character art, voice lines, and dynamic story content.</li>
     <li><strong>Dynamic Character System:</strong> Characters are loaded from Chub's library, creating unique residents and visiting envoys for every playthrough.</li>
+    <li><strong>Worlds of Origin:</strong> Every resident carries a record of the world they came from - canon settings by name - keeping characters true to their roots in every scene.</li>
     <li><strong>Interactive Skits:</strong> Visual novel-style scenes where your choices shape relationships, town stats, and story progression.</li>
     <li><strong>Town Management:</strong> Raise practical or frivolous buildings, manage six interconnected town stats, and balance competing needs.</li>
     <li><strong>Good Neighbors:</strong> Build relationships with the communities and guilds of the Crossroads, trade resources, and find work placements for your residents.</li>
@@ -63,12 +64,12 @@ creator_notes: "
 
 <div class=\"sct-section\">
   <h3>🏗️ Core Buildings</h3>
-  <p>Build and expand your town with specialized buildings. Most serve a unique function and can be assigned a resident to manage them.</p>
+  <p>Build and expand your town with specialized buildings. Most serve a unique function and can be assigned a resident to manage them. Your charter includes six starter buildings: the Arrivals Hall, Meeting Hall, Public Works, Tavern, Town Hall, and Wishing Well.</p>
 
   <div class=\"sct-module\">
     <h4>Arrivals Hall</h4>
     <p><strong>Role:</strong> Greeter</p>
-    <p>The heart of the town's welcome. Hopeful applicants whose wishes were heard step through here into the Crossroads - and take their first bewildered, hopeful steps as residents.</p>
+    <p>The heart of the town's welcome, centered on a set of grand double doors to Everywhere Else. Approved applicants step through at the exact moment they fully commit to a fresh start - and take their first bewildered, hopeful steps as residents.</p>
   </div>
 
   <div class=\"sct-module\">
@@ -91,7 +92,7 @@ creator_notes: "
 
   <div class=\"sct-module\">
     <h4>Tavern</h4>
-    <p><strong>Role:</strong> Host | <strong>Cost:</strong> <span class=\"sct-stat\">Provision 1</span></p>
+    <p><strong>Role:</strong> Host</p>
     <p>Warm hearth, good drink, and better company - where townsfolk and visitors gather to eat, drink, swap news, and build relationships. The social heart of your town.</p>
   </div>
 
@@ -109,8 +110,8 @@ creator_notes: "
 
   <div class=\"sct-module\">
     <h4>Town Hall</h4>
-    <p><strong>Role:</strong> Clerk | <strong>Cost:</strong> <span class=\"sct-stat\">Comfort 2</span> <span class=\"sct-stat\">Wealth 1</span></p>
-    <p>The Founder's office and the desks of the town staff - where permits, plans, records, and the occasional dispute get handled. <em>Requires at least 3 residents in the town.</em></p>
+    <p><strong>Role:</strong> Clerk</p>
+    <p>The Founder's office and the desks of the town staff - where permits, plans, records, and the occasional dispute get handled.</p>
   </div>
 
   <div class=\"sct-module\">
@@ -127,8 +128,8 @@ creator_notes: "
 
   <div class=\"sct-module\">
     <h4>Wishing Well</h4>
-    <p><strong>Role:</strong> Wellkeeper | <strong>Cost:</strong> <span class=\"sct-stat\">Infrastructure 2</span> <span class=\"sct-stat\">Wealth 2</span></p>
-    <p>Develop the plaza around the well at the heart of town, letting the Founder cast wishes of their own into the current - shaping exactly the sort of person they hope will apply for residency. No one is ever brought here against their will. <em>Requires Infrastructure stat of 5+.</em></p>
+    <p><strong>Role:</strong> Wellkeeper</p>
+    <p>An ordinary old stone well in a tidy plaza - or so it looks. Toss in a coin and a wish of your own, describing exactly the sort of person you hope will apply for residency. No one is ever brought here against their will.</p>
   </div>
 
   <div class=\"sct-module\">

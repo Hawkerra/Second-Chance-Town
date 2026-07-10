@@ -106,19 +106,19 @@ export function generateSkitTypePrompt(skit: SkitData, stage: Stage, continuing:
                 `This scene introduces the beginning of the story. Today is move-in day: the player, ${stage.getSave().player.name}, is the Founder of a brand-new town on the edge of the Crossroads - a realm between realms, where the roads of countless worlds meet - and is arriving to see their town completed for the first time. ` +
                 `The town is ${stage.getSave().player.name}'s own project from charter to cornerstone, but they lived elsewhere during the months of construction while the essential buildings went up. Their Aide, ${stage.getSave().aide.name}, has been on site overseeing the final stretch and greets them on arrival. ` +
                 `Draw the tone of this meeting or reunion entirely from ${stage.getSave().aide.name}'s description; do not assume any particular relationship between them beyond the working one. ` +
-                `In the course of showing ${stage.getSave().player.name} around, ${stage.getSave().aide.name} should establish the town's premise: at the heart of town, the Wishing Well taps the deep current that runs between worlds, and that current carries wishes. ` +
-                `Anyone, in any world, who truly and sincerely longs for a new life may have their wish heard - and delivered to the Founder's desk as an application for residency. No one arrives who does not want to be here, and the road home always remains open. ` +
+                `In the course of showing ${stage.getSave().player.name} around, ${stage.getSave().aide.name} should establish the town's premise, ideally beside the Arrivals Hall's centerpiece: a set of grand double doors that lead to Everywhere Else, through which approved residents will step at the exact moment they fully commit to a fresh start. ` +
+                `Anyone, in any world, who truly and sincerely longs for a new life may have their wish heard - folklore credits the ordinary old wishing well in the town square, though it never visibly does anything - and delivered to the Founder's desk as an application for residency. No one arrives who does not want to be here, and the road home always remains open. ` +
                 `The town itself is a sleepy, modern-ish place - power and plumbing humming courtesy of the Public Works - with fresh paint, quiet streets, and every door waiting for someone to live behind it. ` +
                 `${stage.getSave().aide.name} notes that the first applications are already waiting, and is eager to see the town come to life. This scene must end before bringing any additional residents into the town; ` +
                 `this process is handled via a separate game mechanic.` :
                 `Continue this introductory scene, expanding on the initial situation as ${stage.getSave().aide.name} welcomes ${stage.getSave().player.name} to the town they founded and walks them through it on move-in day. ` +
-                `${stage.getSave().aide.name} should establish the core premise: the Wishing Well at the heart of town taps the current that runs between worlds, carrying the wishes of anyone who truly longs for a new life; heard wishes arrive as applications for residency on the Founder's desk, no one comes here unwillingly, and the road home is always open. ` +
+                `${stage.getSave().aide.name} should establish the core premise: the wishes of anyone, in any world, who truly longs for a new life may be heard - folklore credits the town's ordinary old wishing well, which never visibly does anything - and arrive as applications for residency on the Founder's desk; approved residents step through the Arrivals Hall's grand double doors at the exact moment they fully commit, no one comes here unwillingly, and the road home is always open. ` +
                 `Draw the dynamic between ${stage.getSave().aide.name} and ${stage.getSave().player.name} entirely from ${stage.getSave().aide.name}'s description, without assuming any particular relationship beyond the working one. ` +
                 `Once the concept is established, use a "[SUMMARY]" tag to summarize the scene before moving on. This scene must end before bringing any additional residents into the town; ` +
                 `this process is handled via a separate game mechanic; use the "[SUMMARY]" tag to summarize the events of this intro and end the scene before that occurs.`;
         case SkitType.INTRO_CHARACTER:
             return !continuing ? 
-                `This scene will introduce a new character, ${actor.name}, newly arrived through the Arrivals Hall. ${actor.name} wished - knowingly or not - for a new life, and that wish was heard; they may be surprised by the mechanism, but some part of them meant it. They will have little or no knowledge of this world. Establish their personality, their reaction to their arrival, the shape of the wish that brought them here, and possibly some motivations.` :
+                `This scene will introduce a new character, ${actor.name}, newly arrived through the grand double doors of the Arrivals Hall, which opened for them at the exact moment they fully committed to a fresh start. ${actor.name} wished - knowingly or not - for a new life, and that wish was heard; they may be surprised by the mechanism, but some part of them meant it. They will have little or no knowledge of this world. Establish their personality, their reaction to their arrival, the shape of the wish that brought them here, and possibly some motivations.` :
                 `Continue the introduction of ${actor.name}, expanding on their personality or motivations.`;
         case SkitType.VISIT_CHARACTER:
             return !continuing ?
@@ -627,8 +627,8 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
     let fullPrompt = `{{messages}}` +
         buildPromptSegment('Premise', `This is a cozy slice-of-life visual novel game set in Second Chance Town, a brand-new frontier community on the edge of the Crossroads - a realm between realms, where the roads of countless worlds meet. ` +
         `The thrust of the game positions the player character, ${playerName}, as the town's Founder, interacting with the residents as they all build new lives together. ` +
-        `At the heart of town, the Wishing Well taps the deep current that runs between worlds; that current carries wishes, and anyone in any world who truly and sincerely longs for a new life may have their wish heard and delivered to the Founder's desk as an application for residency. ` +
-        `No one arrives who does not want to be here, and the road home always remains open - residency is a choice, renewed by staying. ` +
+        `At the heart of town stands the Wishing Well - by every appearance an ordinary old stone well, and the town is quietly fond of it. Local lore credits it for the way wishes find this place, but it never does anything visible: it is not a portal, machine, or facility, and it must never be described as active, operational, or resonating. Somewhere between the worlds, though, anyone who truly and sincerely longs for a new life may have their wish heard - and delivered to the Founder's desk as an application for residency. ` +
+        `Approved residents arrive in person through the grand double doors of the Arrivals Hall, which open from Everywhere Else at the exact moment someone fully commits to their second chance - and which will open the other way for anyone who chooses to leave. No one arrives who does not want to be here, and the road home always remains open - residency is a choice, renewed by staying. ` +
         `The town itself is a sleepy, modern-ish place of quiet streets and humming utilities, surrounded by gentle countryside that grows stranger and wilder the further out one travels; residents hail from many different worlds, eras, and walks of life, and the town welcomes them all. ` +
         `Much of the day-to-day administration is handled by the Founder's Aide, ${save.aide.name || 'the Aide'}, enabling ${playerName} to focus on the residents' welcome and wellbeing.`) +
         buildPromptSegment('Town Stats', save.stationStats ? (
@@ -637,7 +637,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
         (
             // If module is a quarters, present it as "Owner's quarters" or "vacant quarters": module type otherwise.
             buildPromptSegment('Rooms and Roles', save.layout.getAllModulesWhere(module => true).map(module => module.type == 'quarters' ? 
-                (module.ownerId ? `  ${save.actors[module.ownerId]?.name || 'Unknown'}'s Chambers` : '  Vacant Chambers') : 
+                (module.ownerId ? `  ${save.actors[module.ownerId]?.name || 'Unknown'}'s Home` : '  Vacant Home') : 
                 `  ${module.getAttribute('name')} ${module.getAttribute('role') ? `(${module.getAttribute('role')} : ${module.ownerId ? `${save.actors[module.ownerId]?.name || 'Unknown'}` : 'None'})` : ''}`).join('\n'))
         ) +
         buildPromptSegment(`${playerName}'s profile`, save.player.description) +
@@ -655,7 +655,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
             const otherOutfits = actor.outfits.filter(o => o.id !== currentOutfitId && o.emotionPack['neutral']);
             return `  ${actor.name}\n    Current Appearance (${currentOutfit.name}): ${actor.getDescription(currentOutfitId)}\n` +
                 (otherOutfits.length > 0 ? `    Other Appearances: ${otherOutfits.map(o => o.name).join(', ')}\n` : '') +
-                `    Profile: ${actor.profile}\n    Role: ${roleModule?.getAttribute('role') || 'Resident'}\n    Location: ${locationString}`;
+                `    ${actor.homeworld ? `World of Origin: ${actor.homeworld}\n    ` : ''}Profile: ${actor.profile}\n    Role: ${roleModule?.getAttribute('role') || 'Resident'}\n    Location: ${locationString}`;
         }).join('\n')) +
         // List away characters for reference; just need description and profile:
         buildPromptSegment('Away Characters (On Assignment Away from Town)', awayPatients.map(actor => {
@@ -668,7 +668,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
             const currentOutfit = actor.getOutfitById(currentOutfitId);
             return `  ${actor.name}\n    Current Appearance (${currentOutfit.name}): ${actor.getDescription(currentOutfitId)}\n` +
                 // (otherOutfits.length > 0 ? `    Other Appearances: ${otherOutfits.map(o => o.name).join(', ')}\n` : '') + // Unnecessary for absent characters
-                `    Profile: ${actor.profile}\n    Role: ${roleModule?.getAttribute('role') || 'Resident'}\n    On Assignment to: ${atFaction?.name || 'Unknown Faction'}`;
+                `    ${actor.homeworld ? `World of Origin: ${actor.homeworld}\n    ` : ''}Profile: ${actor.profile}\n    Role: ${roleModule?.getAttribute('role') || 'Resident'}\n    On Assignment to: ${atFaction?.name || 'Unknown Faction'}`;
         }).join('\n')) +
         
         // List cryo characters for reference; just need description and profile:
@@ -679,7 +679,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
             const currentOutfit = actor.getOutfitById(currentOutfitId);
             return `  ${actor.name}\n    Current Appearance (${currentOutfit.name}): ${actor.getDescription(currentOutfitId)}\n` +
                 // (otherOutfits.length > 0 ? `    Other Appearances: ${otherOutfits.map(o => o.name).join(', ')}\n` : '') + // Unnecessary for cryo characters
-                `    Profile: ${actor.profile}\n    Days Home: ${save.day - entranceDate}`;
+                `    ${actor.homeworld ? `World of Origin: ${actor.homeworld}\n    ` : ''}Profile: ${actor.profile}\n    Days Home: ${save.day - entranceDate}`;
         }).join('\n')) +
 
         // List stat meanings, for reference:
@@ -717,7 +717,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
             const otherOutfits = actor.outfits.filter(o => o.id !== currentOutfitId && o.emotionPack['neutral']);
             return `  ${actor.name}\n    Current Appearance (${currentOutfit.name}): ${actor.getDescription(currentOutfitId)}\n` +
                 (otherOutfits.length > 0 ? `    Other Appearances: ${otherOutfits.map(o => o.name).join(', ')}\n` : '') +
-                `    Profile: ${actor.profile}\n    Character Arc: ${actor.characterArc || 'Undetermined'}\n    Days in Town: ${save.day - birthDay}\n` +
+                `    ${actor.homeworld ? `World of Origin: ${actor.homeworld}\n    ` : ''}Profile: ${actor.profile}\n    Character Arc: ${actor.characterArc || 'Undetermined'}\n    Days in Town: ${save.day - birthDay}\n` +
                 (roleModule ? `    Role: ${roleModule.getAttribute('role') || 'Resident'} (${actor.heldRoles[roleModule.getAttribute('role') || 'Resident'] || 0} days)\n` : '') +
                 `    Role Description: ${roleModule?.getAttribute('roleDescription') || 'This character has no assigned role in town. They are to focus upon their own needs.'}\n` +
                 `    Stats:\n      ${Object.entries(actor.stats).map(([stat, value]) => `${stat}: ${value}`).join(', ')}`}).join('\n')}`) +
@@ -755,7 +755,7 @@ function buildOutcomeTagRules(exampleActor: string): string {return `\n#Characte
                             `Do NOT begin the sentence with a number or digit. Keep the sentence to a single line - never a paragraph. Only ONE [ACTIVITY] tag total.\n` +
                             `Full Examples:\n` +
                             `[ACTIVITY: Mara | Spent the afternoon reorganizing the apothecary shelves, muttering about everyone's poor labeling. | Comfort +1]\n` +
-                            `[ACTIVITY: Silas | Was found asleep in the Great Hall again, having missed his own watch shift. | Security -1]\n` +
+                            `[ACTIVITY: Silas | Was found asleep in the Tavern again, having missed his own watch shift. | Security -1]\n` +
                             `[ACTIVITY: Wren | Spent hours arranging wildflowers into window boxes along the main street, purely for the joy of it. | No stat change]\n` +
 
                             `\n#Faction Reputation Changes:#\n` +

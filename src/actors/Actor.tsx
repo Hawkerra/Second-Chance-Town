@@ -66,6 +66,8 @@ class Actor {
     avatarImageUrl: string;
     // 'patient' indicates an applicant origin, 'faction' indicates someone generated as a faction representative, 'aide' is the Founder's Aide, and 'emergent' is a character generated as a result of narrative activity.
     origin: 'patient' | 'emergent' | 'faction' | 'aide' = 'patient';
+    // The character's world/setting of origin: the source work's name for canon characters, or 'Original' plus a brief synopsis.
+    homeworld: string = '';
     profile: string;
     characterArc?: string;
     style: string;
@@ -422,14 +424,14 @@ export async function loadReserveActor(data: any, stage: Stage, includeHistory: 
     const generatedResponse = await stage.makeText({
         prompt: `{{messages}}This is preparatory request for structured and formatted game content.` +
             buildPromptSegment(`Background`, `This game is a cozy multiverse setting that welcomes characters from across eras, worlds, and settings. ` +
-                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - whose Wishing Well hears the wishes of people across the worlds who truly long for a new life, ` +
+                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
                 `with the goal of welcoming these volunteers and helping them settle into a new role in this world. These new roles are offered by the town itself or by external factions, generally in exchange for a finder's fee or reputation boost. ` +
                 `Some roles are above board, while others may involve morally ambiguous or covert activities; some may even be illicit or come with strings attached. ` +
                 `The player's motives and ethics are open-ended; they may be benevolent or self-serving, and the characters they interact with may respond accordingly. `) +
             buildPromptSegment(`Narrative Tone`, `${stage.getSave().tone || stage.TONE_MAP['Original']}`) +
             (includeHistory && historyPrompt ? buildPromptSegment(`Recent Events`, historyPrompt) : '') +
             buildPromptSegment(`Original Details`, `The Original Details below describe a character or scenario (${data.name}) from another universe. This request and response must digest and distill these details to suit the game's narrative scenario, ` +
-                `crafting a character who has just stepped into this world through the town's Arrivals Hall: someone who wished - knowingly or not - for a new life, and whose wish was heard. They may be surprised by the mechanism, but some part of them meant it, and the road home remains open to them. ` +
+                `crafting a character who has just stepped into this world through the grand double doors of the town's Arrivals Hall - doors that opened for them at the exact moment they fully committed to a fresh start: someone who wished - knowingly or not - for a new life, and whose wish was heard. They may be surprised by the mechanism, but some part of them meant it, and the road home remains open to them. ` +
                 `This character's supernatural or arcane abilities survive the crossing largely intact; only powers of truly cosmic scale - godhood, omniscience, reality-shaping, and the like - are dampened by the crossing to roughly the tier of a formidable archmage. ` +
                 `Additionally, the town's standing wards prevent any ability from being used aggressively against the Founder or the town's residents while within its bounds. ` +
                 `Their new description and profile should reflect their arrival in this world and any such changes.\n\n` +
@@ -445,6 +447,7 @@ export async function loadReserveActor(data: any, stage: Stage, includeHistory: 
                 `DESCRIPTION: A vivid description of the character's physical appearance, attire, and any distinguishing features.\n` +
                 `OUTFIT: A one- to two-word name for the character's current outfit that matches the description.\n` +
                 `PROFILE: A brief summary of the character's key personality traits and behaviors.\n` +
+                `WORLD: The name of the character's world or setting of origin - use the source work's actual name if the character comes from recognizable established media, or 'Original' if not - followed by a brief synopsis of that world's defining features and the character's place in it.\n` +
                 `STYLE: A concise description of the character's sense of overall style, mood, interests, or aesthetic, to be applied to the way they decorate their space.\n` +
                 `NAME: Their simple name\n` +
                 `VOICE: Output the specific voice ID from the Available Voices section that best matches the character's apparent gender (foremost) and personality.\n` +
@@ -458,6 +461,7 @@ export async function loadReserveActor(data: any, stage: Stage, includeHistory: 
                 `DESCRIPTION: A tall, athletic woman with short, dark hair and piercing blue eyes. She wears a simple, utilitarian outfit made from durable materials.\n` +
                 `OUTFIT: Utility Gear\n` +
                 `PROFILE: Jane is confident and determined, with a strong sense of justice. She is quick to anger but also quick to forgive. She is fiercely independent and will do whatever it takes to protect those she cares about.\n` +
+                `WORLD: Original - A near-future frontier colony world of rough townships and wide wilderness, where Jane worked as a peacekeeper keeping order on the settlement roads.\n` +
                 `STYLE: Practical and no-nonsense, favoring functionality over fashion. Prefers muted colors and simple designs that allow freedom and comfort.\n` +
                 `NAME: Jane Doe\n` +
                 `VOICE: 03a438b7-ebfa-4f72-9061-f086d8f1fca6\n` +
@@ -543,6 +547,7 @@ export async function loadReserveActor(data: any, stage: Stage, includeHistory: 
         parsedData['font'] || 'Arial, sans-serif',
         generatedOutfitName || ORIGINAL_OUTFIT_NAME
     );
+    newActor.homeworld = (parsedData['world'] || '').trim();
     console.log(`Loaded new actor: ${newActor.name} (ID: ${newActor.id})`);
     console.log(newActor);
     // If name, description, or profile are missing, or banned words are present or the attributes are all defaults (unlikely to have been set at all) or description is non-english, discard this actor by returning null

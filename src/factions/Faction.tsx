@@ -125,7 +125,7 @@ export async function loadReserveFaction(fullPath: string, stage: Stage): Promis
         const generatedResponse = await stage.makeText({
             prompt: `{{messages}}This is preparatory request for structured and formatted game content.` +
                 buildPromptSegment(`Background`, `This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
-                    `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - whose Wishing Well hears the wishes of people across the worlds who truly long for a new life, ` +
+                    `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
                     `with the goal of placing these characters into a new role in this world. These new roles are offered by external factions, generally in exchange for a finder's fee or reputation boost. ` +
                     `Some roles are above board, while others may involve morally ambiguous or covert activities; many may even be illicit, sexual, or compulsory (essentially human trafficking). ` +
                     `The player's motives and ethics are open-ended; they may be benevolent or self-serving, and the characters they interact with may respond accordingly. `) +
@@ -277,7 +277,7 @@ export async function generateFactionModule(faction: Faction, stage: Stage): Pro
             buildPromptSegment(`Existing Modules`,`${Object.entries(MODULE_TEMPLATES).map(([type, mod]) => `- ${type}: Role - ${mod.role || 'N/A'}`).join('\n')}`) +
             buildPromptSegment(`New Module Faction`,`${faction.name}\n${faction.description}\n${faction.visualStyle}`) +
             buildPromptSegment(`Background`,`This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
-                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - whose Wishing Well hears the wishes of people across the worlds who truly long for a new life, ` +
+                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
                 `with the goal of placing these characters into a new role in this world.`) +
             buildPromptSegment(`Narrative Tone`,`${stage.getSave().tone || stage.TONE_MAP['Original']}`) +
             buildPromptSegment(`Modules`,`Modules are the buildings and facilities that make up the town; each has a function varying between utility and entertainment or anything inbetween, and serves as a backdrop for various interactions and events. ` +

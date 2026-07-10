@@ -142,8 +142,8 @@ const randomAction = (module: Module, stage: Stage, setScreenType: (type: Screen
 export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
     'echo chamber': {
         name: 'Arrivals Hall',
-        skitPrompt: `The Arrivals Hall is where approved applicants first step into town, fresh from whatever world their wish was heard in. Scenes in this room typically involve newcomers getting their bearings and taking their first look at their new life.`,
-        imagePrompt: `A bright small-town welcome hall with a polished front desk, a wall of cubby mailboxes and spare keys on hooks, potted plants, and wide doors standing open toward the town square.`,
+        skitPrompt: `The Arrivals Hall is where approved applicants first step into town, entering through the hall's grand double doors - ornate doors to Everywhere Else that open at the exact moment someone fully commits to a fresh start. Scenes in this room typically involve newcomers getting their bearings and taking their first look at their new life.`,
+        imagePrompt: `A bright small-town welcome hall dominated by a set of tall, ornate double doors, with a polished front desk, a wall of cubby mailboxes and spare keys on hooks, potted plants, and windows onto the town square.`,
         role: 'Greeter',
         roleDescription: `Manage the town's day-to-day arrivals, welcoming newcomers and looking after residents' needs as the Founder's right hand.`,
         baseImageUrl: 'https://media.charhub.io/b2bdaa4d-1d35-4640-aceb-811adecd6390/d2721c48-ae91-4c6b-840e-5fd744b05ffb.png',
@@ -353,7 +353,7 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         cost: {Harmony: 2, Infrastructure: 2},
         action: (module: Module, stage: Stage, setScreenType: (type: ScreenType) => void) => {
             // Open the cryo management screen
-            console.log("Opening cryo screen from cryo bank.");
+            console.log("Opening the expedition roster from the Explorers' Guild.");
             setScreenType(ScreenType.CRYO);
         },
         available: (stage: Stage) => {
@@ -364,8 +364,8 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
     },
     'aperture': {
         name: 'Wishing Well',
-        skitPrompt: `The Wishing Well plaza is where the town tends the well at its heart - and where the Founder may cast a wish of their own into the current, describing the sort of person they hope will apply for residency. Scenes here often involve quiet wellside conversations, curiosity about how the well works, or unexpected phenomena.`,
-        imagePrompt: `A picturesque stone wishing well at the center of a tidy plaza, coins glinting beneath clear water that glimmers faintly with otherworldly light, ringed by lampposts, flowerbeds, and benches.`,
+        skitPrompt: `The Wishing Well plaza surrounds the ordinary old stone well at the heart of town - where the Founder, like anyone, may toss in a coin and a hoped-for wish, describing the sort of person they hope will apply for residency. The well never visibly does anything at all. Scenes here often involve quiet wellside conversations, tossed coins, or idle wondering about whether the well is anything more than a well.`,
+        imagePrompt: `A picturesque old stone wishing well at the center of a tidy plaza, coins glinting beneath clear water, ringed by lampposts, flowerbeds, and benches.`,
         role: 'Wellkeeper',
         roleDescription: `Tend the Wishing Well and study its current, helping shape the wishes the town casts out into the worlds.`,
         baseImageUrl: 'https://media.charhub.io/a543e339-136b-4c51-8c64-02f467d8316b/ce0ebe1d-8b03-4734-8a71-5d1873b181a4.png',
@@ -783,7 +783,7 @@ export async function generateModule(name: string, stage: Stage, additionalInfor
             buildPromptSegment(`Existing Modules`, Object.entries(MODULE_TEMPLATES).map(([type, mod]) => `- ${type}: Role - ${mod.role || 'N/A'}`).join('\n')) +
             buildPromptSegment(`New Module Details`, `Name: ${name || 'N/A'}\nNew Role: ${role || 'N/A'}\nAdditional Information: ${additionalInformation || 'N/A'}`) +
             buildPromptSegment(`Background`, `This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
-                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - whose Wishing Well hears the wishes of people across the worlds who truly long for a new life, ` +
+                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
                 `with the goal of welcoming these volunteers and helping them settle into a new role in this world. ` +
                 `Modules are the buildings and facilities that make up the town; each has a function varying between utility and entertainment or anything inbetween, and serves as a backdrop for various interactions and events. ` +
                 `Every module offers a resident-assignable role with an associated responsibility or purpose, which can again vary wildly between practical and whimsical.`) +

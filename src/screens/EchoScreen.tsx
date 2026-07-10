@@ -78,7 +78,7 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 	const accept = () => {
 		const selected = selectedSlotIndex != null ? echoSlots[selectedSlotIndex] : null;
 		const firstRoom = stage().getSave().layout.getModulesWhere(m => m?.type === 'quarters' && !m?.ownerId)[0] || null;
-		if (selected && firstRoom && selected.isPrimaryImageReady) {
+		if (selected && firstRoom && selected.isPrimaryImageReady && !!(selected.homeworld || '').trim()) {
 			// Assign the selected actor to the first available room
 			firstRoom.ownerId = selected.id;
 			generateActorDecor(selected, firstRoom, stage());
@@ -212,7 +212,7 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 	const module = stage().getSave().layout.getModulesWhere(m => m?.type === 'echo chamber')[0]!;
 	const availableRooms = stage().getSave().layout.getModulesWhere(m => m?.type === 'quarters' && !m?.ownerId) || [];
 	const selectedActor = selectedSlotIndex != null ? echoSlots[selectedSlotIndex] : null;
-	const acceptable = selectedActor && selectedActor.isPrimaryImageReady && availableRooms.length > 0;
+	const acceptable = selectedActor && selectedActor.isPrimaryImageReady && !!(selectedActor.homeworld || '').trim() && availableRooms.length > 0;
 	const background = stage().getSave().actors[module.ownerId || '']?.decorImageUrls[module.type] || module.getAttribute('defaultImageUrl')
 
 	return (
@@ -457,7 +457,7 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 						{availableRooms.length === 0 
 							? 'No Available Quarters' 
 							: selectedActor 
-								? (selectedActor.isPrimaryImageReady ? 'Approve Residency' : 'Still Taking Form')
+								? (!selectedActor.isPrimaryImageReady ? 'Still Taking Form' : !(selectedActor.homeworld || '').trim() ? 'World of Origin Required' : 'Approve Residency')
 								: 'Select an Applicant'
 						}
 					</Button>
@@ -484,7 +484,7 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 							{availableRooms.length === 0 
 								? 'No Available Quarters' 
 								: selectedActor 
-									? (selectedActor.isPrimaryImageReady ? 'Approve Residency' : 'Still Taking Form')
+									? (!selectedActor.isPrimaryImageReady ? 'Still Taking Form' : !(selectedActor.homeworld || '').trim() ? 'World of Origin Required' : 'Approve Residency')
 									: 'Select an Applicant'
 							}
 						</Button>
