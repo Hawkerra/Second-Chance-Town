@@ -1,6 +1,6 @@
 {
-  "name": "@lord-raven/post-apocalypse-rehabilitation-center",
-  "private": false,
+  "name": "second-chance-town",
+  "private": true,
   "version": "0.0.0",
   "type": "module",
   "files": [
