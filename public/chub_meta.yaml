@@ -193,3 +193,6 @@ state_schema:
 # so the deploy workflow mints a brand-new stage on first push.
 
 github_path: 'https://github.com/Hawkerra/Second-Chance-Town'
+
+extension_id: 'second-chance-town-67aff462a57e'
+
