@@ -324,6 +324,7 @@ export async function loadReserveActorFromFullPath(fullPath: string, stage: Stag
         fullPath: item.node.fullPath,
         personality: item.node.definition.personality.replaceAll('{{char}}', dataName).replaceAll('{{user}}', 'Individual X'),
         avatar: item.node.max_res_url,
+        topics: Array.isArray(item.node.topics) ? item.node.topics.filter((t: unknown) => typeof t === 'string') : [],
         // If the voice ID is not in the VOICE_MAP, it is a custom voice and should be preserved
         voiceId: !VOICE_MAP[item.node.definition.voice_id] ? item.node.definition.voice_id : ''
     };
@@ -442,12 +443,13 @@ export async function loadReserveActor(data: any, stage: Stage, includeHistory: 
                 `Score these traits according to the character as they now stand - abilities intact save for any cosmic-tier dampening - reflecting their genuine capabilities in this world (but omit your reasons from the response structure); ` +
                 `characters may greet their arrival with anything from cold feet and homesickness to relief, excitement, or hope - but on some level, they chose this. Most will see a fresh start; some, an adventure.\n\n` +
             buildPromptSegment(`Original Details about ${data.name}`, `${data.personality}`) +
+            (Array.isArray(data.topics) && data.topics.length ? buildPromptSegment(`Original Tags for ${data.name}`, `${data.topics.join(', ')}`) : '') +
             buildPromptSegment(`Available Voices`, `${Object.entries(VOICE_MAP).map(([voiceId, voiceDesc]) => '  - ' + voiceId + ': ' + voiceDesc).join('\n')}`) +
             buildPromptSegment(`Instructions`, `After carefully considering this description and the rules provided, the System will generate a concise breakdown for a character based upon these details in the following strict format:\n` +
                 `DESCRIPTION: A vivid description of the character's physical appearance, attire, and any distinguishing features.\n` +
                 `OUTFIT: A one- to two-word name for the character's current outfit that matches the description.\n` +
                 `PROFILE: A brief summary of the character's key personality traits and behaviors.\n` +
-                `WORLD: The name of the character's world or setting of origin - use the source work's actual name if the character comes from recognizable established media, or 'Original' if not - followed by a brief synopsis of that world's defining features and the character's place in it.\n` +
+                `WORLD: The character's world or setting of origin. Name an established published setting ONLY when the Original Details or Original Tags clearly identify it - an explicit mention, or a name so distinctive it could only belong to that one character. When the source is not evident from the card itself - and always for characters with common or ordinary names - write 'Original' instead, even if the name happens to match someone from published media, and invent a brief fitting synopsis from the details provided. Never attribute a published setting from a hunch or vague resemblance. Follow the setting name (or 'Original') with a brief synopsis of that world's defining features and the character's place in it.\n` +
                 `STYLE: A concise description of the character's sense of overall style, mood, interests, or aesthetic, to be applied to the way they decorate their space.\n` +
                 `NAME: Their simple name\n` +
                 `VOICE: Output the specific voice ID from the Available Voices section that best matches the character's apparent gender (foremost) and personality.\n` +

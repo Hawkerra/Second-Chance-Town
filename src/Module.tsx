@@ -490,8 +490,10 @@ export const DEFAULT_GRID_HEIGHT = 5;
 
 export type LayoutChangeHandler = (grid: Module[]) => void;
 
-// The buildable footprint of each floor: a circle-like shape within the 8x5 grid,
-// a 3x3 center (cols 3-5, rows 1-3) plus three cells extending in each cardinal direction.
+// The buildable footprint of each district within the 8x5 grid: the original
+// circle-like core (a 3x3 center plus arms in each cardinal direction), expanded so
+// that everything to the right of the navigation column (x=2) is buildable - filling
+// the right-arm corners and the full rightmost column.
 export const FLOOR_FOOTPRINT: ReadonlyArray<{ x: number; y: number }> = [
     // center 3x3
     {x:3,y:1},{x:4,y:1},{x:5,y:1},
@@ -505,6 +507,9 @@ export const FLOOR_FOOTPRINT: ReadonlyArray<{ x: number; y: number }> = [
     {x:2,y:1},{x:2,y:2},{x:2,y:3},
     // right arm
     {x:6,y:1},{x:6,y:2},{x:6,y:3},
+    // right expansion: corner fill plus the full rightmost column
+    {x:6,y:0},{x:6,y:4},
+    {x:7,y:0},{x:7,y:1},{x:7,y:2},{x:7,y:3},{x:7,y:4},
 ];
 
 export function isFootprintCell(x: number, y: number): boolean {
