@@ -31,7 +31,7 @@ type Timeline = TimelineEvent[];
 export type SaveType = {
     player: {name: string, description: string};
     aide: {name: string, description: string, actorId?: string};
-    solidSpirit?: boolean; // When true, the tower spirit renders without the ghostly effect (manifesting physically)
+    solidSpirit?: boolean; // Legacy field from the tower-spirit era; the Aide always renders normally now.
     directorModule: {name: string, roleName: string, module?: ModuleIntrinsic};
     echoes: (Actor | null)[]; // actors currently in echo slots (can be null for empty slots)
     actors: {[key: string]: Actor};
@@ -57,10 +57,10 @@ export type SaveType = {
     tone?: string;
     disableImpersonation?: boolean;
     commsVisitors?: string[]; // List of actor IDs currently visiting the comms module (for faction representatives)
-    activityLog?: ActivityEntry[]; // Tower Activity Log: what residents got up to while the player wasn't directly involved.
+    activityLog?: ActivityEntry[]; // Town Activity Log: what residents got up to while the player wasn't directly involved.
 }
 
-// A single Tower Activity Log entry - one line about what a resident did off-screen.
+// A single Town Activity Log entry - one line about what a resident did off-screen.
 export type ActivityEntry = {
     id: string; // Unique id so a specific entry can be reverted.
     day: number;
@@ -68,7 +68,7 @@ export type ActivityEntry = {
     actorId: string;
     actorName: string;
     line: string; // The single-sentence activity description shown in the log.
-    stat?: string; // Optional tower stat affected by this activity.
+    stat?: string; // Optional town stat affected by this activity.
     amount?: number; // Optional +1 / -1 nudge to that stat.
 }
 
@@ -356,12 +356,12 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         layout.setModuleAt(centerX - 1, centerY - 1, createModule('comms', { id: `comms-${centerX - 1}-${centerY - 1}`, attributes: {} }));
         this.userId = Object.values(users)[0].anonymizedId;
         this.freshSave = { player: {name: Object.values(users)[0].name, description: Object.values(users)[0].chatProfile || ''}, 
-            directorModule: {name: 'Magus\'s Study', roleName: 'Maid'},
+            directorModule: {name: `Founder's Manor`, roleName: 'Maid'},
             aide: {
                 name: 'Soji', 
-                description: `Every respectable tower comes haunted, and the Spire is no exception! Your resident tower spirit has been bound to these stones since long before your arrival and knows the Spire's workings intimately, so you don't have to. ` +
-                `Fair warning: two centuries of empty halls have left them a touch capricious - expect teasing, dramatics, and open delight in your confusion, as your suffering is (by their own cheerful admission) the finest entertainment they've had in two hundred years. ` +
-                `Rest assured the binding compels honest service no matter how they grumble, and those who earn their trust report the needling softens into something almost like fondness. They are especially fond of introducing you as the late Magus's magic-order bride or groom.`}, 
+                description: `Your right hand and the town's first employee. While you settled your affairs elsewhere, your Aide spent the final months of construction on site - chasing contractors, filing the charter paperwork, and learning every pipe, pole, and ledger of the town by heart so you don't have to. ` +
+                `The job runs well past keeping your itinerary: when the Founder can't be somewhere, the Aide goes in their stead, and anything the town needs handled lands on their list before it ever reaches your desk. ` +
+                `However you came to trust them with all of this, the trust was well placed.`}, 
             echoes: [], actors: {}, factions: {}, layout: layout, day: 1, turn: 0, currentSkit: undefined, typeOutSpeed: this.DEFAULT_TYPE_OUT_SPEED, reserveActors: [] };
 
         // ensure at least one save exists and has a layout
@@ -384,10 +384,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             console.log('Registering tools.');
             this.mcp.registerTool('modify-station-stat',
                 {
-                    title: 'Modify Tower Stat',
-                    description: 'If events result in a change to a tower stat, use this tool to register a tower stat change.',
+                    title: 'Modify Town Stat',
+                    description: 'If events result in a change to a town stat, use this tool to register a town stat change.',
                     inputSchema: {
-                        stat: z.enum(Object.values(StationStat) as [string, ...string[]]).describe('Tower stat to modify'),
+                        stat: z.enum(Object.values(StationStat) as [string, ...string[]]).describe('Town stat to modify'),
                         change: z.number().min(-10).max(10).describe('Amount to change the stat by'),
                     }
                 },
@@ -396,7 +396,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     // this.getSave().currentSkit ...
                     // For now, we're just testing that it works.
                     console.log(`Tool called: modifyStationStat(${stat}, ${change})`);
-                    return { content: [{type: 'text', text: `Tower stat ${stat} changed by ${change}.` }] };
+                    return { content: [{type: 'text', text: `Town stat ${stat} changed by ${change}.` }] };
                 }
             );
 
@@ -449,7 +449,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     /**
-     * Advances a single turn without running a full skit, and generates one Tower Activity Log
+     * Advances a single turn without running a full skit, and generates one Town Activity Log
      * entry describing what a random resident got up to. Fire-and-forget for the LLM call so the
      * UI stays responsive; the turn advances immediately.
      */
@@ -481,7 +481,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.incTurn(1, setScreenType);
         const save = this.getSave();
 
-        // Pick a resident of the tower (or the bound tower spirit) - not away with a faction, not in stasis/dead.
+        // Pick a resident of the town (or the Aide) - not away with a faction, not on expedition/dead.
         const candidates = Object.values(save.actors).filter(a =>
             !a.factionId &&
             !['cryo', 'dead'].includes(a.locationId || '')
@@ -494,15 +494,15 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         const statNames = Object.values(StationStat).join(', ');
 
         const subjectContext = isSpirit
-            ? `${actor.name} is the tower's bound spirit and steward - a capricious, theatrical presence who has haunted these stones for two centuries. Describe something they got up to as the spirit of the tower (drifting through walls, tormenting the furniture, tending the wards, observing the residents), fitting their personality.`
-            : `${actor.name} is the tower's ${role}` +
+            ? `${actor.name} is the Founder's Aide and the town's steward - the person who quietly keeps the whole place running. Describe something they got up to around town in that capacity (running errands, balancing ledgers, fielding residents' requests, tying up loose ends), fitting their personality.`
+            : `${actor.name} is the town's ${role}` +
               (proficiency >= 7 ? ` and is notably skilled at it` : proficiency <= 3 ? ` but struggles with the work` : ``) + `.`;
 
-        const prompt = `The following is a fantasy tower-management game set in the Spire, an isolated wizard's tower. ` +
-            `Time has quietly passed. Describe, in ONE short sentence (no more than 20 words, never a paragraph), something that ${actor.name} got up to around the tower during this quiet stretch. ` +
+        const prompt = `The following is a cozy town-management game set in Second Chance Town, a small frontier community at the crossroads of many worlds. ` +
+            `Time has quietly passed. Describe, in ONE short sentence (no more than 20 words, never a paragraph), something that ${actor.name} got up to around town during this quiet stretch. ` +
             `Let their personality shape it. ${subjectContext} ` +
             `Personality/profile: ${actor.profile}\n\n` +
-            `MOST of the time this should be a purely flavorful moment with no mechanical effect. Only OCCASIONALLY - when the activity clearly and notably helped or harmed the tower - include a single tower-stat change of exactly +1 or -1. ` +
+            `MOST of the time this should be a purely flavorful moment with no mechanical effect. Only OCCASIONALLY - when the activity clearly and notably helped or harmed the town - include a single town-stat change of exactly +1 or -1. ` +
             `Do not force one; a change should feel like an occasional pleasant surprise or minor setback, not a routine occurrence.\n` +
             `Format your reply as ONE line, and ALWAYS end with a required tag:\n` +
             `<the single sentence> ||STAT <one of: ${statNames}> <+1 or -1>\n` +
@@ -557,7 +557,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
     }
 
     /**
-     * Reverts a logged activity by id: removes it from the log and reverses its tower-stat change
+     * Reverts a logged activity by id: removes it from the log and reverses its town-stat change
      * (clamped). Hidden proficiency is intentionally left as-is.
      */
     revertActivity(entryId: string): void {
@@ -665,12 +665,6 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         // Restore turn from old phase variable.
         if (save && save['turn'] === undefined) {
             save['turn'] = save['phase'] || 0;
-        }
-        // Migration: the 'Arcanum' tower stat was renamed to 'Stability'. Rename the key on older saves
-        // so the stat value carries over instead of being orphaned.
-        if (save && save['stationStats'] && save['stationStats']['Arcanum'] !== undefined && save['stationStats']['Stability'] === undefined) {
-            save['stationStats']['Stability'] = save['stationStats']['Arcanum'];
-            delete save['stationStats']['Arcanum'];
         }
         // Use smart rehydration to automatically detect and restore all nested objects
         const hydrated = smartRehydrate(save) as SaveType;
@@ -792,8 +786,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         
         const placeholderModule = {
             name: this.getSave().directorModule.name,
-            skitPrompt: 'Private chambers are personal living spaces for the tower\'s residents. Scenes here often involve personal interactions:  revelations, troubles, interests, or relaxation.',
-            imagePrompt: 'A cozy tower bedchamber with a bed, personal storage, and warm lantern light, reflecting the occupant\'s personality.',
+            skitPrompt: `Homes are the residents' own houses and personal spaces. Scenes here often involve personal interactions: revelations, troubles, interests, or relaxation.`,
+            imagePrompt: `A cozy small-town home interior with comfortable furniture, personal touches, and warm evening light, reflecting the occupant's personality.`,
             baseImageUrl: 'https://media.charhub.io/66449ff3-1a40-4e41-a008-d541ae05bcec/112975ea-7924-4ddc-9a9f-63779c4bec7d.png', 
             defaultImageUrl: 'https://media.charhub.io/66449ff3-1a40-4e41-a008-d541ae05bcec/112975ea-7924-4ddc-9a9f-63779c4bec7d.png',
             role: this.getSave().directorModule.roleName,
@@ -823,8 +817,8 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
 
             // Kick off director module generation
             generateModule(this.getSave().directorModule.name, this, 
-                `This is a room designed specifically around the Magus, ${this.getSave().player.name}, and their needs or tastes.\n` +
-                `About the Magus, ${this.getSave().player.name}:\n${this.getSave().player.description}`,
+                `This is a building designed specifically around the Founder, ${this.getSave().player.name}, and their needs or tastes.\n` +
+                `About the Founder, ${this.getSave().player.name}:\n${this.getSave().player.description}`,
                 this.getSave().directorModule.roleName).then(module => {
                     if (module) {
                         this.getSave().directorModule.module = module;
@@ -861,7 +855,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         // Initialize stationStats if missing
         if (!save.stationStats || Object.keys(save.stationStats).length < 6) {
             save.stationStats = {
-                'Stability': 3,
+                'Infrastructure': 3,
                 'Comfort': 3,
                 'Provision': 3,
                 'Security': 3,
@@ -997,10 +991,10 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                 const actorData = {
                     name: save.aide.name,
                     fullPath: '',
-                    personality: `The Spire's bound tower spirit and steward: ${save.aide.description}`
+                    personality: `The Founder's Aide and the town's steward: ${save.aide.description}`
                 }
                 // Retry a few times if it fails (or returns null):
-                // The tower spirit is a pre-existing bound entity, not a summon - the arcane focus shouldn't shape it.
+                // The Aide is a pre-existing staff member, not an applicant - the Wishing Well shouldn't shape them.
                 for (let attempt = 0; attempt < 3; attempt++) {
                     const aideActor = await loadReserveActor(actorData, this, false, true);
                     if (aideActor) {
@@ -1189,7 +1183,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         }
         const newIndex = save.layout.addFloor();
         save.layout.setCurrentFloor(newIndex);
-        this.pushToTimeline(save, `The Magus raised a new floor of the Spire (floor ${newIndex + 1}).`);
+        this.pushToTimeline(save, `The Founder opened a new district of town (district ${newIndex + 1}).`);
         this.saveGame();
         return newIndex;
     }
@@ -1448,9 +1442,9 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         const save = this.getSave();
         if (save.currentSkit) {
             if (save.currentSkit.type === SkitType.EXIT_CRYO) {
-                this.pushToTimeline(save, `${save.actors[save.currentSkit.actorId ?? '']?.name || 'An unknown individual'} returned through the Homeward Gate.`);
+                this.pushToTimeline(save, `${save.actors[save.currentSkit.actorId ?? '']?.name || 'An unknown individual'} returned from their expedition.`);
             } else if (save.currentSkit.type === SkitType.INTRO_CHARACTER) {
-                this.pushToTimeline(save, `New resident, ${save.actors[save.currentSkit.actorId ?? '']?.name || 'An unknown individual'}, summoned to the Spire.`);
+                this.pushToTimeline(save, `New resident, ${save.actors[save.currentSkit.actorId ?? '']?.name || 'An unknown individual'}, welcomed to town.`);
             }
             // Save skit to timeline first, so (most) outcomes save afterward.
             this.pushToTimeline(save, `${save.currentSkit.type} skit.`, save.currentSkit);
@@ -1489,7 +1483,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     // Handle station stat changes here if needed
                     if (save.stationStats && outcome.stat in save.stationStats) {
                         save.stationStats[outcome.stat as StationStat] += outcome.amount;
-                        this.showPriorityMessage(`The Spire's ${outcome.stat} ${outcome.amount >= 0 ? 'increased' : 'decreased'} by ${Math.abs(outcome.amount)}.`);
+                        this.showPriorityMessage(`The town's ${outcome.stat} ${outcome.amount >= 0 ? 'increased' : 'decreased'} by ${Math.abs(outcome.amount)}.`);
                     }
                 } else if (outcome.type === 'factionReputation' && outcome.factionId && outcome.amount) {
                     if (save.factions[outcome.factionId]) {
@@ -1503,7 +1497,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                         // If reputation reaches 0, deactivate faction
                         if (newReputation <= 0 && faction.active) {
                             faction.active = false;
-                            this.pushToTimeline(save, `The ${faction.name} cut ties with the Spire.`);
+                            this.pushToTimeline(save, `The ${faction.name} cut ties with the town.`);
                             // Remove any actors belonging to this faction from the PARC:
                             Object.values(save.actors).forEach(actor => {
                                 if (actor.factionId === faction.id) {
@@ -1623,7 +1617,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                     // Validate the line; discard silently if it's gibberish/malformed.
                     const validatedLine = actor ? this.validateActivityLine(outcome.activityLine) : null;
                     if (actor && validatedLine) {
-                        // Append to the Tower Activity Log (kept separate from the player-facing stat list).
+                        // Append to the Town Activity Log (kept separate from the player-facing stat list).
                         if (!save.activityLog) save.activityLog = [];
                         const entry: ActivityEntry = {
                             id: generateUuid(),
@@ -1633,14 +1627,14 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
                             actorName: actor.name,
                             line: validatedLine,
                         };
-                        // Apply the optional clamped tower-stat nudge silently (no player-facing toast).
+                        // Apply the optional clamped town-stat nudge silently (no player-facing toast).
                         if (outcome.activityStat && outcome.activityAmount && save.stationStats && outcome.activityStat in save.stationStats) {
                             const delta = outcome.activityAmount > 0 ? 1 : -1;
                             save.stationStats[outcome.activityStat] = Math.max(1, Math.min(10, save.stationStats[outcome.activityStat] + delta));
                             entry.stat = String(outcome.activityStat);
                             entry.amount = delta;
                             // Nudge the resident's hidden proficiency in their current role toward the activity's direction.
-                            // (The tower spirit has no room-role, so skip proficiency for it.)
+                            // (The Aide has no building-role, so skip proficiency for them.)
                             const role = getRole(actor, save);
                             if (role && actor.id !== save.aide.actorId) actor.adjustRoleProficiency(role, delta);
                         }

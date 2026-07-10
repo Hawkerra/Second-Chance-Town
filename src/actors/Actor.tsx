@@ -64,7 +64,7 @@ class Actor {
     locationId: string = ''; // If this is a module ID, the actor is currently present in that module; if it is a faction ID, the actor is temporarily located offstation with that faction
     factionId: string = ''; // If this actor belongs to a faction, the ID of that faction; '' is the PARC or independent
     avatarImageUrl: string;
-    // 'patient' indicates an echo origin, 'faction' indicates a someone generated as a faction representative, 'aide' is the station aide, and 'emergent' is a character generated as a result of narrative activity.
+    // 'patient' indicates an applicant origin, 'faction' indicates someone generated as a faction representative, 'aide' is the Founder's Aide, and 'emergent' is a character generated as a result of narrative activity.
     origin: 'patient' | 'emergent' | 'faction' | 'aide' = 'patient';
     profile: string;
     characterArc?: string;
@@ -281,10 +281,10 @@ class Actor {
     }
 }
 
-export function isHologram(actor: Actor, save: SaveType, currentLocationId: string): boolean {
-        // Faction envoys always render as scrying projections; the tower spirit renders
-        // as a ghost unless the player has toggled a solid manifestation in settings.
-        return !!(save.factions[currentLocationId]) || (save.aide.actorId === actor.id && !save.solidSpirit);
+export function isHologram(_actor: Actor, _save: SaveType, _currentLocationId: string): boolean {
+        // Legacy of the tower-spirit era: representatives visit in person and the Aide is
+        // flesh and blood, so nobody renders as a projection anymore.
+        return false;
     }
 
 export function getStatDescription(stat: Stat | string): string {
@@ -328,7 +328,7 @@ export async function loadReserveActorFromFullPath(fullPath: string, stage: Stag
 
     // Quality floor: reject candidate cards that are too small to be worth distilling (e.g. sub-200-token
     // protest/placeholder cards). This gates SELECTION only - it is not applied to the distillation itself,
-    // nor to specially-loaded actors like the tower spirit or emergent NPCs (which use loadReserveActor directly).
+    // nor to specially-loaded actors like the Aide or emergent NPCs (which use loadReserveActor directly).
     // Rough token estimate ~= words / 0.75 (about 1.33 tokens per word).
     const rawText = `${data.name || ''} ${data.personality || ''}`.trim();
     const estimatedTokens = Math.round(rawText.split(/\s+/).filter(Boolean).length / 0.75);
@@ -421,24 +421,24 @@ export async function loadReserveActor(data: any, stage: Stage, includeHistory: 
     // Take this data and use text generation to get an updated distillation of this character, including a physical description.
     const generatedResponse = await stage.makeText({
         prompt: `{{messages}}This is preparatory request for structured and formatted game content.` +
-            buildPromptSegment(`Background`, `This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
-                `The player of this game, ${stage.getSave().player.name}, presides as Magus over an isolated wizard's tower called the Sanctum for Planar Intake, Restoration, and Enrichment, or the Spire, which summons people from other realities and helps them adapt to a new life, ` +
-                `with the goal of placing these characters into a new role in this world. These new roles are offered by external factions, generally in exchange for a finder's fee or reputation boost. ` +
-                `Some roles are above board, while others may involve morally ambiguous or covert activities; some may even be illicit or compulsary. ` +
+            buildPromptSegment(`Background`, `This game is a cozy multiverse setting that welcomes characters from across eras, worlds, and settings. ` +
+                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - whose Wishing Well hears the wishes of people across the worlds who truly long for a new life, ` +
+                `with the goal of welcoming these volunteers and helping them settle into a new role in this world. These new roles are offered by the town itself or by external factions, generally in exchange for a finder's fee or reputation boost. ` +
+                `Some roles are above board, while others may involve morally ambiguous or covert activities; some may even be illicit or come with strings attached. ` +
                 `The player's motives and ethics are open-ended; they may be benevolent or self-serving, and the characters they interact with may respond accordingly. `) +
             buildPromptSegment(`Narrative Tone`, `${stage.getSave().tone || stage.TONE_MAP['Original']}`) +
             (includeHistory && historyPrompt ? buildPromptSegment(`Recent Events`, historyPrompt) : '') +
             buildPromptSegment(`Original Details`, `The Original Details below describe a character or scenario (${data.name}) from another universe. This request and response must digest and distill these details to suit the game's narrative scenario, ` +
-                `crafting a character who has been drawn bodily into this world through the Spire's summoning sanctum, plucked alive - and without their consent - from their home reality by the leyline's one-way current. ` +
+                `crafting a character who has just stepped into this world through the town's Arrivals Hall: someone who wished - knowingly or not - for a new life, and whose wish was heard. They may be surprised by the mechanism, but some part of them meant it, and the road home remains open to them. ` +
                 `This character's supernatural or arcane abilities survive the crossing largely intact; only powers of truly cosmic scale - godhood, omniscience, reality-shaping, and the like - are dampened by the crossing to roughly the tier of a formidable archmage. ` +
-                `Additionally, the Spire's standing wards prevent any ability from being used aggressively against the Magus or the tower's residents while within its walls. ` +
+                `Additionally, the town's standing wards prevent any ability from being used aggressively against the Founder or the town's residents while within its bounds. ` +
                 `Their new description and profile should reflect their arrival in this world and any such changes.\n\n` +
                 `The provided Original Details reference 'Individual X' who no longer exists in this timeline; ` +
                 `if Individual X remains relevant to this character, Individual X should be replaced with an appropriate name in the distillation.\n\n` +
                 `In addition to the simple display name, physical description, and personality profile, ` +
                 `score the character on a scale of 1-10 for the following traits: BRAWN, SKILL, NERVE, WITS, CHARM, LUST, JOY, and TRUST.\n` +
                 `Score these traits according to the character as they now stand - abilities intact save for any cosmic-tier dampening - reflecting their genuine capabilities in this world (but omit your reasons from the response structure); ` +
-                `some characters may not respond well to being torn from their lives and homes without consent. Others may see an adventure, or a fresh start.\n\n` +
+                `characters may greet their arrival with anything from cold feet and homesickness to relief, excitement, or hope - but on some level, they chose this. Most will see a fresh start; some, an adventure.\n\n` +
             buildPromptSegment(`Original Details about ${data.name}`, `${data.personality}`) +
             buildPromptSegment(`Available Voices`, `${Object.entries(VOICE_MAP).map(([voiceId, voiceDesc]) => '  - ' + voiceId + ': ' + voiceDesc).join('\n')}`) +
             buildPromptSegment(`Instructions`, `After carefully considering this description and the rules provided, the System will generate a concise breakdown for a character based upon these details in the following strict format:\n` +
@@ -474,7 +474,7 @@ export async function loadReserveActor(data: any, stage: Stage, includeHistory: 
                 `#END#`) +
             (stage.getSave().attenuation && !suppressAttenuation ? 
                 buildPromptSegment(`Attenuation`, 
-                    `The tower's arcane focus is currently attuned to modify the resulting summoning; take the following additional context into account while forming this distillation:\n${stage.getSave().attenuation}`) : 
+                    `The Founder has cast a wish of their own into the Wishing Well, shaping who applies for residency; take the following additional context into account while forming this distillation:\n${stage.getSave().attenuation}`) : 
                 '')),
         stop: ['#END'],
         include_history: true, // There won't be any history, but if this is true, the front-end doesn't automatically apply pre-/post-history prompts.
@@ -751,7 +751,7 @@ export async function generateActorDecor(actor: Actor, module: Module, stage: St
     // Bundle both the description generation and image generation into a single promise
     stage.imageGenerationPromises[`actor/decor/${actor.id}/${module.type}`] = (async () => {
         // Generate a decor prompt for this actor for this space, based on the module's description and the actor's style
-        const descriptionPrompt = `Generate an updated description of this room within a wizard's tower: ${module.getAttribute('name')}.\n` +
+        const descriptionPrompt = `Generate an updated description of this building in a cozy small town: ${module.getAttribute('name')}.\n` +
             `The current description is: ${module.getAttribute('description')}.\n` +
             `Output an updated description of this room, including additional details for furnishings and decorations to help the description match this aesthetic: ${actor.style}.\n` +
             `Example Response:\n` +
@@ -766,7 +766,7 @@ export async function generateActorDecor(actor: Actor, module: Module, stage: St
         // Generate a decor image based on the generated room description
         const decorImageUrl = await stage.makeImageFromImage({
             image: module.getAttribute('baseImageUrl') || '',
-            prompt: `Redecorate this room within a wizard's tower to match this description: ${decorDescriptionResponse?.result || module.getAttribute('description')}.\n` +
+            prompt: `Redecorate this building in a cozy small town to match this description: ${decorDescriptionResponse?.result || module.getAttribute('description')}.\n` +
                     `The scene remains unoccupied; remove any people from the result.`,
             remove_background: false,
             transfer_type: 'edit'
@@ -929,7 +929,7 @@ export function getRole(actor: Actor, save: SaveType): string {
     if (roleModule !== undefined) {
         return roleModule.getAttribute('role') || '';
     } else if (save.aide.actorId === actor.id) {
-        return 'Tower Spirit';
+        return 'Aide';
     } else if (actor.factionId && save.factions[actor.factionId]) {
         return save.factions[actor.factionId].name;
     }

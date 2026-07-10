@@ -164,7 +164,7 @@ const OutcomePortraitBox: FC<OutcomePortraitBoxProps> = ({
 const SkitOutcomeDisplay: FC<SkitOutcomeDisplayProps> = ({ outcomes, stage, layout, isOutcomeTransient }) => {
     // Calculate bottom position based on message box top
 
-    // Tower Activity outcomes are surfaced only in the Activity Log tab, never in the in-skit stat display.
+    // Town Activity outcomes are surfaced only in the Activity Log tab, never in the in-skit stat display.
     const currentOutcomes: Outcome[] = (outcomes || []).filter(o => o.type !== 'towerActivity');
     const save = stage.getSave();
     const mappedOutcomeOrders = new Set<number>();
@@ -316,12 +316,12 @@ const SkitOutcomeDisplay: FC<SkitOutcomeDisplayProps> = ({ outcomes, stage, layo
     const resolveActorName = (actorId?: string): string => {
         if (!actorId) return 'Unknown';
         if (actorId === 'player') return save.player.name;
-        if (actorId === 'STATION') return 'The Spire';
+        if (actorId === 'STATION') return 'Second Chance Town';
         return save.actors[actorId]?.name || actorId;
     };
 
     const resolveFactionName = (factionId?: string): string => {
-        if (!factionId) return 'The Spire';
+        if (!factionId) return 'Second Chance Town';
         return save.factions[factionId]?.name || factionId;
     };
 
@@ -410,7 +410,7 @@ const SkitOutcomeDisplay: FC<SkitOutcomeDisplayProps> = ({ outcomes, stage, layo
             case 'actorStat':
                 return `${resolveActorName(outcome.actorId)}: ${String(outcome.stat || 'Stat')} ${(outcome.amount || 0) >= 0 ? '+' : ''}${outcome.amount || 0}`;
             case 'stationStat':
-                return `${String(outcome.stat || 'Tower Stat')}: ${(outcome.amount || 0) >= 0 ? '+' : ''}${outcome.amount || 0}`;
+                return `${String(outcome.stat || 'Town Stat')}: ${(outcome.amount || 0) >= 0 ? '+' : ''}${outcome.amount || 0}`;
             case 'roleChange':
                 return `${resolveActorName(outcome.actorId)} is now ${outcome.role && outcome.role.trim().length > 0 ? outcome.role : 'Patient'}`;
             case 'factionChange':
@@ -426,7 +426,7 @@ const SkitOutcomeDisplay: FC<SkitOutcomeDisplayProps> = ({ outcomes, stage, layo
             case 'newActor':
                 return outcome.actor?.name
                     ? `New character: ${outcome.actor.name}`
-                    : 'New character joined the Spire';
+                    : 'New character joined the town';
             case 'movement': {
                 const movement = getMovementPresentation(outcome);
                 if (movement) {
@@ -933,7 +933,7 @@ const SkitOutcomeDisplay: FC<SkitOutcomeDisplayProps> = ({ outcomes, stage, layo
                                     transition={{ duration: 0.4, delay: 0.7 + actorOutcomeGroups.length * 0.2 }}
                                     style={{ marginBottom: '12px' }}
                                 >
-                                    <Nameplate name="The Spire" size="large" layout="inline" />
+                                    <Nameplate name="Second Chance Town" size="large" layout="inline" />
                                 </motion.div>
                                 {stationStatEntries.length > 0 && renderStatEntries(stationStatEntries, actorOutcomeGroups.length, true)}
                                 {parcModuleEntries.length > 0 && renderParcModuleEntries(parcModuleEntries)}

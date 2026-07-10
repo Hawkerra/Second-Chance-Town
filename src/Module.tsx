@@ -12,7 +12,7 @@ export type ModuleType = 'echo chamber' | 'comms' | 'generator' | 'quarters' | '
     | string; // Allow string for modded modules
 
 export enum StationStat {
-    SYSTEMS = 'Stability',
+    INFRASTRUCTURE = 'Infrastructure',
     COMFORT = 'Comfort',
     PROVISION = 'Provision',
     SECURITY = 'Security',
@@ -22,7 +22,7 @@ export enum StationStat {
 
 // Icon mapping for station stats
 export const STATION_STAT_ICONS: Record<StationStat, any> = {
-    [StationStat.SYSTEMS]: Build,
+    [StationStat.INFRASTRUCTURE]: Build,
     [StationStat.COMFORT]: Hotel,
     [StationStat.PROVISION]: Restaurant,
     [StationStat.SECURITY]: Security,
@@ -31,12 +31,12 @@ export const STATION_STAT_ICONS: Record<StationStat, any> = {
 };
 
 export const STATION_STAT_DESCRIPTIONS: Record<StationStat, string> = {
-    'Stability': 'The overall condition of the tower, its facilities, and its enchantments',
+    'Infrastructure': 'The overall condition of the town, its utilities, and its public works',
     'Comfort': 'Overall comfort and livability for residents',
     'Provision': 'Availability of food, water, and essential supplies',
     'Security': 'Safety and defense against external and internal threats',
     'Harmony': 'Social cohesion and morale among inhabitants',
-    'Wealth': 'Financial resources of the tower and its Magus'
+    'Wealth': 'Financial resources of the town and its Founder'
 };
 
 export function getStatRating(score: number): StatRating {
@@ -63,33 +63,33 @@ export enum StatRating {
     EXCELLENT = 'excellent'
 }
 export const STATION_STAT_PROMPTS: Record<StationStat, Record<StatRating, string>> = {
-    'Stability': {
-        [StatRating.POOR]: 'The tower is plagued by faltering enchantments, groaning masonry, and misbehaving animated fixtures, leaving it barely functional.',
-        [StatRating.BELOW_AVERAGE]: 'The tower suffers occasional flickering enchantments and minor structural concerns that need attention.',
-        [StatRating.AVERAGE]: 'The tower is generally functional, with routine upkeep keeping its enchantments working, if finicky.',
-        [StatRating.GOOD]: 'The tower runs smoothly, its enchantments well-tended and its stonework sound.',
-        [StatRating.EXCELLENT]: 'The tower hums with masterwork enchantments and impeccable structural integrity, operating flawlessly.'
+    'Infrastructure': {
+        [StatRating.POOR]: 'The town is plagued by outages, potholes, and balky plumbing, its infrastructure barely functional.',
+        [StatRating.BELOW_AVERAGE]: 'The town suffers occasional outages, leaks, and minor maintenance concerns that need attention.',
+        [StatRating.AVERAGE]: 'The town is generally functional, with routine upkeep keeping its utilities working, if finicky.',
+        [StatRating.GOOD]: 'The town runs smoothly, its utilities well-tended and its streets and buildings sound.',
+        [StatRating.EXCELLENT]: 'The town hums along on impeccable utilities and well-kept works, operating flawlessly.'
     },
     'Comfort': {
         [StatRating.POOR]: 'Living conditions are harsh, filthy, and downright unhealthy, leading to widespread dissatisfaction among inhabitants.',
         [StatRating.BELOW_AVERAGE]: 'Living conditions are subpar, messy, and unpleasant, with many inhabitants feeling uneasy in their environment.',
         [StatRating.AVERAGE]: 'Living conditions and cleanliness are acceptable, providing a basic level of comfort for inhabitants.',
-        [StatRating.GOOD]: 'The tower offers a comfortable, clean, and pleasant living environment for its residents.',
+        [StatRating.GOOD]: 'The town offers a comfortable, clean, and pleasant living environment for its residents.',
         [StatRating.EXCELLENT]: 'Inhabitants enjoy luxurious, impeccable, and healthful living conditions, enhancing their overall well-being.'
     },
     'Provision': {
         [StatRating.POOR]: 'Essential supplies are scarce, leading to frequent shortages and hardships for inhabitants.',
         [StatRating.BELOW_AVERAGE]: 'Provision levels are inconsistent, with occasional shortages of food, water, and supplies.',
-        [StatRating.AVERAGE]: 'The tower maintains a steady supply of essentials, meeting the basic needs of residents.',
+        [StatRating.AVERAGE]: 'The town maintains a steady supply of essentials, meeting the basic needs of residents.',
         [StatRating.GOOD]: 'Provision levels are reliable, ensuring inhabitants have access to necessary supplies without issue.',
-        [StatRating.EXCELLENT]: 'The tower is abundantly stocked with essentials, providing more than enough for all residents.'
+        [StatRating.EXCELLENT]: 'The town is abundantly stocked with essentials, providing more than enough for all residents.'
     },
     'Security': {
-        [StatRating.POOR]: 'The tower is vulnerable to threats, its wards thin and neglected, with frequent security concerns.',
+        [StatRating.POOR]: 'The town is vulnerable to trouble, its wards thin and its watch stretched, with frequent security concerns.',
         [StatRating.BELOW_AVERAGE]: 'Security measures are weak, leading to occasional malfeasance and safety concerns among inhabitants.',
-        [StatRating.AVERAGE]: 'The tower keeps standard wards and watch routines in place; residents may occasionally act out but are generally kept in check.',
-        [StatRating.GOOD]: 'Security is robust, the wards and watch effectively protecting the tower and its residents from threats.',
-        [StatRating.EXCELLENT]: 'The tower is layered in masterwork wards and vigilant sentinels, ensuring unparalleled safety and protection for all.'
+        [StatRating.AVERAGE]: 'The town keeps standard wards and watch routines in place; residents may occasionally act out but are generally kept in check.',
+        [StatRating.GOOD]: 'Security is robust, the wards and watch effectively protecting the town and its residents from trouble.',
+        [StatRating.EXCELLENT]: 'The town is kept safe by well-laid wards and a vigilant watch, ensuring unparalleled safety and protection for all.'
     },
     'Harmony': {
         [StatRating.POOR]: 'Social tensions run high and morale is non-existent, leading to frequent conflicts and a toxic atmosphere among inhabitants.',
@@ -98,12 +98,12 @@ export const STATION_STAT_PROMPTS: Record<StationStat, Record<StatRating, string
         [StatRating.GOOD]: 'A strong sense of community and high morale prevails, fostering good vibes and positive relationships among inhabitants.',
         [StatRating.EXCELLENT]: 'Inhabitants enjoy a harmonious and supportive social environment, thriving together in unity.'
     },
-    'Wealth': { // Wealther is financial resources of the station and its Director and does not necessarily reflect the personal wealth of inhabitants nor the station's overall provision levels
+    'Wealth': { // Wealth is financial resources of the town and its Founder and does not necessarily reflect the personal wealth of inhabitants nor the town's overall provision levels
         [StatRating.POOR]: 'Financial resources are critically low, potentially leading to severe budget cuts and creditor threats.',
         [StatRating.BELOW_AVERAGE]: 'Wealth levels are low, leading to budget constraints and creditor complaints.',
-        [StatRating.AVERAGE]: 'The Magus maintains a stable financial footing, covering operational costs and bills.',
-        [StatRating.GOOD]: 'The Magus is financially healthy, with ample resources in reserve.',
-        [StatRating.EXCELLENT]: 'The Magus enjoys significant wealth, capable of lavish spending.'
+        [StatRating.AVERAGE]: 'The Founder maintains a stable financial footing, covering operational costs and bills.',
+        [StatRating.GOOD]: 'The Founder is financially healthy, with ample resources in reserve.',
+        [StatRating.EXCELLENT]: 'The Founder enjoys significant wealth, capable of lavish spending.'
     }
 };
 
@@ -141,11 +141,11 @@ const randomAction = (module: Module, stage: Stage, setScreenType: (type: Screen
 
 export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
     'echo chamber': {
-        name: 'Summoning Sanctum',
-        skitPrompt: 'The summoning sanctum is where the Magus completes summonings, drawing people out of the leyline current and bodily into this world. Scenes in this room typically involve newly summoned residents as they get their bearings.',
-        imagePrompt: 'A circular ritual chamber with a glowing summoning circle inlaid in the stone floor, arcane sigils on the walls, candles, and shelves of ritual implements.',
-        role: 'Apprentice',
-        roleDescription: `Manage tower operations, monitoring the residents and supplementing their needs as the Magus's right hand.`,
+        name: 'Arrivals Hall',
+        skitPrompt: `The Arrivals Hall is where approved applicants first step into town, fresh from whatever world their wish was heard in. Scenes in this room typically involve newcomers getting their bearings and taking their first look at their new life.`,
+        imagePrompt: `A bright small-town welcome hall with a polished front desk, a wall of cubby mailboxes and spare keys on hooks, potted plants, and wide doors standing open toward the town square.`,
+        role: 'Greeter',
+        roleDescription: `Manage the town's day-to-day arrivals, welcoming newcomers and looking after residents' needs as the Founder's right hand.`,
         baseImageUrl: 'https://media.charhub.io/b2bdaa4d-1d35-4640-aceb-811adecd6390/d2721c48-ae91-4c6b-840e-5fd744b05ffb.png',
         defaultImageUrl: 'https://media.charhub.io/b2bdaa4d-1d35-4640-aceb-811adecd6390/d2721c48-ae91-4c6b-840e-5fd744b05ffb.png',
         cost: {}, // Free; starter module
@@ -161,13 +161,12 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     comms: {
-        name: 'Scrying Mirror',
-        skitPrompt: `The scrying mirror is the tower's only practical link to the outside world; the surrounding jungle and ruins make overland travel treacherous at the best of times. ` +
-            `This room is critical for dealing with external factions, whose approved envoys can be summoned into the Spire or sent away again, and with whom the Spire finds work for residents or conducts trade in exchange for desired resources. ` +
-            `Scenes here often involve arrivals and departures, messages carried by envoys, or coordinating comings and goings among the residents.`,
-        imagePrompt: 'A grand stone chamber dominated by a towering enchanted mirror framed in ornate silver and glowing runes, ringed by braziers, with a modest waiting area to one side.',
+        name: 'Meeting Hall',
+        skitPrompt: `The Meeting Hall is where the town receives the wider Crossroads: representatives from neighboring towns, guilds, and larger polities visit to arrange trade, work placements, and deals with the Founder. ` +
+            `Scenes here often involve arrivals and departures, negotiations, messages carried by visiting envoys, or coordinating comings and goings among the residents.`,
+        imagePrompt: `A welcoming town meeting hall with a long wooden conference table, comfortable chairs, maps of the surrounding region pinned to the walls, a coffee sideboard, and a modest waiting area to one side.`,
         role: 'Herald',
-        roleDescription: `Oversee the scrying mirror and its comings and goings, receiving envoys and managing the tower's dealings with the outside world.`,
+        roleDescription: `Oversee the Meeting Hall and its comings and goings, receiving visiting representatives and managing the town's dealings with the wider Crossroads.`,
         baseImageUrl: 'https://media.charhub.io/dab03719-bf9b-42ad-b66a-3427c478000d/416b208c-14de-4e17-900c-221b8f9ee271.png',
         defaultImageUrl: 'https://media.charhub.io/dab03719-bf9b-42ad-b66a-3427c478000d/416b208c-14de-4e17-900c-221b8f9ee271.png',
         cost: {}, // Free; starter module
@@ -221,11 +220,11 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     generator: {
-        name: 'Leyline Font',
-        skitPrompt: 'The leyline font is where the tower taps the great leyline nexus beneath it, and serves as a hub for tending the enchantments that keep the Spire running. Scenes here often involve the tower\'s overall stability and upkeep.',
-        imagePrompt: 'A vaulted stone chamber built around a column of radiant leyline energy rising through the floor, ringed by runic conduits, crystal regulators, and arcane control lecterns.',
-        role: 'Artificer',
-        roleDescription: `Tend the tower's enchantments and leyline flows, ensuring every chamber receives adequate magic and maintenance to function properly.`,
+        name: 'Public Works',
+        skitPrompt: `Public Works keeps the town running: power, water, roads, and the occasional stubborn mystery in the pipes. Scenes here often involve the town's overall infrastructure and upkeep.`,
+        imagePrompt: `A tidy small-town public works yard with a humming utility building, a water tower, workbenches of tools, spools of cable, and neatly organized maintenance equipment.`,
+        role: 'Engineer',
+        roleDescription: `Tend the town's utilities and infrastructure, ensuring every building has the power, water, and maintenance it needs to function properly.`,
         baseImageUrl: 'https://media.charhub.io/b978c4d3-d24a-44f4-a75b-e4f5d3bcd0b2/d01a6221-b46e-4d47-9e32-d99406582acc.png',
         defaultImageUrl: 'https://media.charhub.io/b978c4d3-d24a-44f4-a75b-e4f5d3bcd0b2/d01a6221-b46e-4d47-9e32-d99406582acc.png',
         cost: {}, // Free; starter module
@@ -236,9 +235,9 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     quarters: {
-        name: 'Chambers',
-        skitPrompt: 'Private chambers are personal living spaces for the tower\'s residents. Scenes here often involve personal interactions:  revelations, troubles, interests, or relaxation.',
-        imagePrompt: 'A cozy tower bedchamber with a bed, personal storage, and warm lantern light, reflecting the occupant\'s personality.',
+        name: 'Home',
+        skitPrompt: `Homes are the residents' own houses and personal spaces. Scenes here often involve personal interactions: revelations, troubles, interests, or relaxation.`,
+        imagePrompt: `A cozy small-town home interior with comfortable furniture, personal touches, and warm evening light, reflecting the occupant's personality.`,
         baseImageUrl: 'https://media.charhub.io/66449ff3-1a40-4e41-a008-d541ae05bcec/112975ea-7924-4ddc-9a9f-63779c4bec7d.png', 
         defaultImageUrl: 'https://media.charhub.io/66449ff3-1a40-4e41-a008-d541ae05bcec/112975ea-7924-4ddc-9a9f-63779c4bec7d.png',
         cost: {Provision: 1},
@@ -265,11 +264,11 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     commons: {
-        name: 'Great Hall',
-        skitPrompt: 'The great hall is a place for residents to gather, relax, eat, and interact. Scenes here often involve camaraderie, conflicts, and leisure activities among the residents.',
-        imagePrompt: 'A warm great hall with a long table and benches, a large hearth, and pantry shelves and cooking facilities along the far wall.',
-        role: 'Steward',
-        roleDescription: `Maintain the tower's communal spaces, ensuring they remain inviting and well-stocked for residents' meals and gatherings.`,
+        name: 'Tavern',
+        skitPrompt: `The tavern is where townsfolk and visitors gather to eat, drink, relax, and swap news. Scenes here often involve camaraderie, conflicts, and leisure among the residents.`,
+        imagePrompt: `A warm, inviting tavern with a long bar, mismatched tables and chairs, a big hearth, a chalkboard menu, and a busy kitchen pass along the far wall.`,
+        role: 'Host',
+        roleDescription: `Run the town's gathering place, keeping it inviting and well-stocked for residents' meals, drinks, and get-togethers.`,
         baseImageUrl: 'https://media.charhub.io/c752b842-b465-451c-b870-3d2d612e51c0/f8ee79f3-d243-4a5e-be01-78a6412e132c.png', 
         defaultImageUrl: 'https://media.charhub.io/c752b842-b465-451c-b870-3d2d612e51c0/f8ee79f3-d243-4a5e-be01-78a6412e132c.png',
         cost: {Provision: 1},
@@ -281,8 +280,8 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
     },
     infirmary: {
         name: 'Apothecary',
-        skitPrompt: 'The apothecary is the tower\'s healing hall, where residents receive treatment and care. Scenes here often involve injuries, ailments, or ways to improve the residents\' health and well-being.',
-        imagePrompt: 'A candlelit healing room with cots, herb-drying racks, shelves of potions and poultices, and a healer\'s workbench.',
+        skitPrompt: `The apothecary is the town's clinic and pharmacy, where residents receive treatment and care. Scenes here often involve injuries, ailments, or ways to improve the residents' health and well-being.`,
+        imagePrompt: `A sunlit small-town clinic with tidy cots, shelves of jarred herbs and remedies alongside modern first-aid supplies, and a practitioner's workbench.`,
         role: 'Healer',
         roleDescription: `Provide healing and remedies for the residents, ensuring their health and well-being.`,
         baseImageUrl: 'https://media.charhub.io/cb482b96-fa2e-44cf-83ea-b90fb7d53467/c4c2851e-a111-4ffa-9cab-ba039738c88d.png',
@@ -295,11 +294,11 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     gym: {
-        name: 'Sparring Hall',
-        skitPrompt: 'The sparring hall is where residents train and maintain their physical health. Scenes here often involve training sessions, contests, or ways to boost morale through physical activity.',
-        imagePrompt: 'A stone training hall with weapon racks, practice dummies, sparring mats, and tall windows.',
-        role: 'Drillmaster',
-        roleDescription: `Oversee the physical training of the residents, ensuring they remain in fighting form for whatever their duties demand.`,
+        name: 'Training Yard',
+        skitPrompt: `The training yard is where residents exercise, train, and blow off steam. Scenes here often involve training sessions, friendly contests, or ways to boost morale through physical activity.`,
+        imagePrompt: `An open-air training yard with a small gym shed, free weights, a stretch of running track around a green, practice equipment, and benches under a shade tree.`,
+        role: 'Coach',
+        roleDescription: `Run the town's training and fitness programs, keeping residents active and spirits high.`,
         baseImageUrl: 'https://media.charhub.io/9af4597d-a1bd-4f6e-9680-33de1b230333/00b3e479-5ad4-4225-b35d-ed1b15c2d2ff.png',
         defaultImageUrl: 'https://media.charhub.io/9af4597d-a1bd-4f6e-9680-33de1b230333/00b3e479-5ad4-4225-b35d-ed1b15c2d2ff.png',
         cost: {Comfort: 1, Wealth: 1},
@@ -310,11 +309,11 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     lounge: {
-        name: 'Parlor',
-        skitPrompt: 'The parlor is a recreational room where residents can unwind with a drink and socialize. Scenes here often involve leisure, gossip, games, and ways to boost morale through relaxation and entertainment.',
-        imagePrompt: 'A cozy tower parlor with plush seating, a hearth, a small bar of cordials and wines, and tables for cards and games.',
-        role: 'Host',
-        roleDescription: `Oversee the tower's leisure spaces, ensuring residents have a comfortable and enjoyable place to relax and socialize.`,
+        name: 'Town Hall',
+        skitPrompt: `The town hall houses the Founder's office and the desks of the town staff, and is where official business gets done: permits, plans, records, and the occasional dispute. Scenes here often involve town business, planning, paperwork, or residents dropping by with requests.`,
+        imagePrompt: `A modest town hall interior with a records counter, filing cabinets, a notice board layered with flyers, staff desks with warm lamps, and the Founder's office door standing ajar.`,
+        role: 'Clerk',
+        roleDescription: `Keep the town's records and official business in order, supporting the Founder and staff in the day-to-day running of the town.`,
         baseImageUrl: 'https://media.charhub.io/9c7272aa-b468-4a04-8013-c643149cea29/5de9e404-a651-4b21-bc2a-7050c43dc995.png',
         defaultImageUrl: 'https://media.charhub.io/9c7272aa-b468-4a04-8013-c643149cea29/5de9e404-a651-4b21-bc2a-7050c43dc995.png',
         cost: {Comfort: 2, Wealth: 1},
@@ -327,14 +326,14 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     armory: {
-        name: 'Armory',
-        skitPrompt: 'The armory is the tower\'s defense hub, where weapons, armor, and the Spire\'s protective wards are managed. Scenes here often involve security matters, incident reports, or ways to strengthen the tower\'s defenses.',
-        imagePrompt: 'A stone armory with racks of weapons, armor stands, shields on the walls, and a workbench for maintenance.',
-        role: 'Warden',
-        roleDescription: `Manage the tower's defenses and ensure the safety of the residents against external and internal threats.`,
+        name: 'Watch Post',
+        skitPrompt: `The watch post is the town's security hub, where the wards, watch rotations, and emergency plans are managed; the nearby countryside is gentle, but the deeper frontier is still wild. Scenes here often involve security matters, incident reports, or ways to keep the town safe.`,
+        imagePrompt: `A small-town watch post with a duty desk, a radio set, a wall map dotted with pins, storage lockers, and rain slickers and lanterns hung by the door.`,
+        role: 'Watch Captain',
+        roleDescription: `Manage the town's watch and defenses, ensuring the safety of the residents from whatever the frontier turns up.`,
         baseImageUrl: 'https://media.charhub.io/a4a6c1ed-866d-439b-a9c0-1a00897187b9/ba47369e-b666-4a31-9745-54f9ccf294fb.png',
         defaultImageUrl: 'https://media.charhub.io/a4a6c1ed-866d-439b-a9c0-1a00897187b9/ba47369e-b666-4a31-9745-54f9ccf294fb.png',
-        cost: {Stability: 1, Wealth: 1},
+        cost: {Infrastructure: 1, Wealth: 1},
         action: randomAction,
         available: (stage: Stage) => {
             // Require to have met at least three factions:
@@ -344,14 +343,14 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     'cryo bank': {
-        name: 'Homeward Gate',
-        skitPrompt: 'The homeward gate is a two-way portal that returns residents to their home realities under a recall bond, allowing the Magus to call them back to the Spire at will - far more cheaply than a fresh summoning. The gate refuses to work for the Magus alone. Scenes in this room often involve farewells, returns, homesickness, or the ethics of the recall bond.',
-        imagePrompt: 'A solemn stone chamber housing a freestanding archway carved with concentric rings of runes, its interior filled with a calm curtain of silver light.',
-        role: 'Gatekeeper',
-        roleDescription: `Tend the homeward gate and its recall bonds, overseeing departures home and returns to the Spire.`,
+        name: `Explorers' Guild`,
+        skitPrompt: `The Explorers' Guild charters expeditions into the unmapped frontier beyond the town; residents who sign on are away in the field until they return, and the Guild keeps the maps, trophies, and expedition ledgers. Scenes in this room often involve send-offs, returns, tales from the field, or planning the next venture.`,
+        imagePrompt: `A rustic explorers' guild hall with a large frontier map pinned with route markers, packs and gear hung on wall hooks, shelves of odd trophies and finds, and a heavy sign-up ledger on a sturdy desk.`,
+        role: 'Guildmaster',
+        roleDescription: `Run the Explorers' Guild, chartering expeditions into the frontier and tracking who is in the field and when they are due back.`,
         baseImageUrl: 'https://media.charhub.io/d081e188-8bd0-4027-9e21-489840924a95/968a7272-75f1-4b3d-b516-64588d9b0f03.png',
         defaultImageUrl: 'https://media.charhub.io/d081e188-8bd0-4027-9e21-489840924a95/968a7272-75f1-4b3d-b516-64588d9b0f03.png',
-        cost: {Harmony: 2, Stability: 2},
+        cost: {Harmony: 2, Infrastructure: 2},
         action: (module: Module, stage: Stage, setScreenType: (type: ScreenType) => void) => {
             // Open the cryo management screen
             console.log("Opening cryo screen from cryo bank.");
@@ -364,23 +363,23 @@ export const MODULE_TEMPLATES: Record<ModuleType, ModuleIntrinsic> = {
         }
     },
     'aperture': {
-        name: 'Arcane Focus',
-        skitPrompt: 'The arcane focus is a specialized apparatus for attuning or shaping summonings drawn from the leyline current. Scenes here often involve scholarly discussions about the ill-understood mechanics of summoning or unexpected phenomena.',
-        imagePrompt: 'A wizard\'s observatory-laboratory centered on a great brass and crystal lens array, surrounded by charts and instruments, with motes of light streaming along a glowing leyline through the chamber.',
-        role: 'Attuner',
-        roleDescription: `Conduct research on the leyline and its currents, managing the tower's experimental summoning projects.`,
+        name: 'Wishing Well',
+        skitPrompt: `The Wishing Well plaza is where the town tends the well at its heart - and where the Founder may cast a wish of their own into the current, describing the sort of person they hope will apply for residency. Scenes here often involve quiet wellside conversations, curiosity about how the well works, or unexpected phenomena.`,
+        imagePrompt: `A picturesque stone wishing well at the center of a tidy plaza, coins glinting beneath clear water that glimmers faintly with otherworldly light, ringed by lampposts, flowerbeds, and benches.`,
+        role: 'Wellkeeper',
+        roleDescription: `Tend the Wishing Well and study its current, helping shape the wishes the town casts out into the worlds.`,
         baseImageUrl: 'https://media.charhub.io/a543e339-136b-4c51-8c64-02f467d8316b/ce0ebe1d-8b03-4734-8a71-5d1873b181a4.png',
         defaultImageUrl: 'https://media.charhub.io/a543e339-136b-4c51-8c64-02f467d8316b/ce0ebe1d-8b03-4734-8a71-5d1873b181a4.png',
-        cost: {Stability: 2, Wealth: 2},
+        cost: {Infrastructure: 2, Wealth: 2},
         action: (module: Module, stage: Stage, setScreenType: (type: ScreenType) => void) => {
             // Open the attenuation screen
             console.log("Opening aperture screen from aperture module.");
             setScreenType(ScreenType.APERTURE);
         },
         available: (stage: Stage) => {
-            // Can have only one in stage.getSave().layout, and only once the station's Systems stat is at least 5:
-            const systemsStat = stage.getSave().stationStats?.[StationStat.SYSTEMS] || 0;
-            return stage.getLayout().getModulesWhere(m => m.type === 'aperture').length === 0 && systemsStat >= 5;
+            // Can have only one in stage.getSave().layout, and only once the town's Infrastructure stat is at least 5:
+            const infrastructureStat = stage.getSave().stationStats?.[StationStat.INFRASTRUCTURE] || 0;
+            return stage.getLayout().getModulesWhere(m => m.type === 'aperture').length === 0 && infrastructureStat >= 5;
         }
     }
 };
@@ -519,12 +518,12 @@ export const GO_DOWN_CELL = { x: 2, y: 4 };    // lower-left: "go down" appears 
 export const MAX_FLOORS = 5;
 
 // Escalating cost to build each floor, indexed by the floor being built (floor 2 = index 2).
-// Floor 1 exists for free at game start. Values are tower-stat point costs.
+// Floor 1 exists for free at game start. Values are town-stat point costs.
 export const FLOOR_BUILD_COSTS: Record<number, Partial<Record<StationStat, number>>> = {
     2: { [StationStat.COMFORT]: 1, [StationStat.HARMONY]: 1 },
-    3: { [StationStat.HARMONY]: 1, [StationStat.SYSTEMS]: 1, [StationStat.WEALTH]: 1 },
-    4: { [StationStat.HARMONY]: 2, [StationStat.SYSTEMS]: 1, [StationStat.SECURITY]: 1 },
-    5: { [StationStat.HARMONY]: 2, [StationStat.SYSTEMS]: 2, [StationStat.SECURITY]: 1, [StationStat.WEALTH]: 1 },
+    3: { [StationStat.HARMONY]: 1, [StationStat.INFRASTRUCTURE]: 1, [StationStat.WEALTH]: 1 },
+    4: { [StationStat.HARMONY]: 2, [StationStat.INFRASTRUCTURE]: 1, [StationStat.SECURITY]: 1 },
+    5: { [StationStat.HARMONY]: 2, [StationStat.INFRASTRUCTURE]: 2, [StationStat.SECURITY]: 1, [StationStat.WEALTH]: 1 },
 };
 
 
@@ -779,37 +778,37 @@ export async function generateModule(name: string, stage: Stage, additionalInfor
     // Generate a module from a module name, some arbitrary details, and a role title
     const generatedResponse = await stage.makeText({
         prompt: `{{messages}}This is preparatory request for structured and formatted game content. ` +
-            `The goal is to define a module/room for a wizard tower management game, based primarily upon the name and/or the additional information provided, ` +
+            `The goal is to define a building for a cozy town management game, based primarily upon the name and/or the additional information provided, ` +
             `while generally avoiding duplicating existing content below. ` +
             buildPromptSegment(`Existing Modules`, Object.entries(MODULE_TEMPLATES).map(([type, mod]) => `- ${type}: Role - ${mod.role || 'N/A'}`).join('\n')) +
             buildPromptSegment(`New Module Details`, `Name: ${name || 'N/A'}\nNew Role: ${role || 'N/A'}\nAdditional Information: ${additionalInformation || 'N/A'}`) +
             buildPromptSegment(`Background`, `This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
-                `The player of this game, ${stage.getSave().player.name}, presides as Magus over an isolated wizard's tower called the Sanctum for Planar Intake, Restoration, and Enrichment, or the Spire, which summons people from other realities and helps them adapt to a new life, ` +
-                `with the goal of placing these characters into a new role in this world. ` +
-                `Modules are rooms and facilities that make up the Spire; each module has a function varying between utility and entertainment or anything inbetween, and serve as a backdrop for various interactions and events. ` +
+                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - whose Wishing Well hears the wishes of people across the worlds who truly long for a new life, ` +
+                `with the goal of welcoming these volunteers and helping them settle into a new role in this world. ` +
+                `Modules are the buildings and facilities that make up the town; each has a function varying between utility and entertainment or anything inbetween, and serves as a backdrop for various interactions and events. ` +
                 `Every module offers a resident-assignable role with an associated responsibility or purpose, which can again vary wildly between practical and whimsical.`) +
-            buildPromptSegment(`Instructions`, `After carefully considering the provided details, the System will generate a formatted definition for a distinct and inspired tower module that suits the prompt, outputting it in the following strict format:\n` +
+            buildPromptSegment(`Instructions`, `After carefully considering the provided details, the System will generate a formatted definition for a distinct and inspired town building that suits the prompt, outputting it in the following strict format:\n` +
                 `MODULE NAME: The module's simple name (1-2 words)\n` +
-                `PURPOSE: A brief summary of the module's function and role in the tower, as well as how that role might affect the tower's residents or inform skits at this location.\n` +
+                `PURPOSE: A brief summary of the building's function and role in the town, as well as how that role might affect the town's residents or inform skits at this location.\n` +
                 `DESCRIPTION: A vivid visual description of the module's appearance, to be fed into image generation.\n` +
                 `ROLE NAME: The simple title of the role associated with this module (1-2 words).\n` +
                 `ROLE DESCRIPTION: A brief summary of the responsibilities and duties associated with this role.\n` +
-                `COST: The resource cost to build this module, specified as 1-3 points of one or two tower stats. Available stats are: Stability, Comfort, Provision, Security, Harmony, Wealth. Format as "StatName X, StatName Y" (e.g., "Wealth 2, Stability 1" or "Provision 2").\n` +
+                `COST: The resource cost to build this building, specified as 1-3 points of one or two town stats. Available stats are: Infrastructure, Comfort, Provision, Security, Harmony, Wealth. Format as "StatName X, StatName Y" (e.g., "Wealth 2, Infrastructure 1" or "Provision 2").\n` +
                 `#END#`) +
             buildPromptSegment(`Example Response`,
-                `MODULE NAME: Homeward Gate\n` +
-                `PURPOSE: The homeward gate is a two-way portal that returns residents to their home realities under a recall bond, letting the Magus call them back at will. Scenes in this room often involve farewells, returns, homesickness, or the ethics of the recall bond.\n` +
-                `DESCRIPTION: A solemn stone chamber housing a freestanding archway carved with concentric rings of runes, its interior filled with a calm curtain of silver light.\n` +
-                `ROLE NAME: Gatekeeper\n` +
-                `ROLE DESCRIPTION: Responsible for tending the homeward gate and its recall bonds, overseeing departures home and returns to the Spire.\n` +
-                `COST: Harmony 2, Stability 2\n` +
+                `MODULE NAME: Greenhouse\n` +
+                `PURPOSE: The greenhouse grows fresh produce and flowers for the town year-round. Scenes in this building often involve gardening, quiet conversations among the plants, or the small dramas of a prize tomato.\n` +
+                `DESCRIPTION: A glass-paneled greenhouse warm with filtered sunlight, full of raised beds, hanging planters, seed trays, and a potting bench cluttered with tools and gloves.\n` +
+                `ROLE NAME: Gardener\n` +
+                `ROLE DESCRIPTION: Responsible for tending the greenhouse and its crops, keeping the town supplied with fresh produce and the occasional bouquet.\n` +
+                `COST: Provision 2, Infrastructure 1\n` +
                 `#END#`) +
             buildPromptSegment(`Example Response`,
-                `MODULE NAME: Sparring Hall\n` +
-                `PURPOSE: The sparring hall is where residents train and maintain their physical health. Scenes here often involve training sessions, contests, or ways to boost morale through physical activity.\n` +
-                `DESCRIPTION: A stone training hall with weapon racks, practice dummies, sparring mats, and tall windows.\n` +
-                `ROLE NAME: Drillmaster\n` +
-                `ROLE DESCRIPTION: Oversees the physical training of the residents, ensuring they remain in fighting form for whatever their duties demand.\n` +
+                `MODULE NAME: Radio Station\n` +
+                `PURPOSE: The town's little radio station broadcasts music, news, and neighborly gossip across the valley. Scenes here often involve interviews, song requests, on-air mishaps, or ways to boost morale through entertainment.\n` +
+                `DESCRIPTION: A snug broadcast booth with foam-paneled walls, a cluttered mixing desk, shelves of records and tapes, and an ON AIR sign glowing over the door.\n` +
+                `ROLE NAME: Broadcaster\n` +
+                `ROLE DESCRIPTION: Runs the town's radio programming, keeping residents informed, entertained, and gently teased.\n` +
                 `COST: Comfort 1, Wealth 1\n` +
                 `#END#`),
         stop: ['#END'],
@@ -871,7 +870,7 @@ export async function generateModule(name: string, stage: Stage, additionalInfor
     const parsedCost: {[key in StationStat]?: number} = {};
     
     if (costString) {
-        // Parse cost string like "Wealth 2, Stability 1" or "Provision 2"
+        // Parse cost string like "Wealth 2, Infrastructure 1" or "Provision 2"
         const costParts = costString.split(',').map(s => s.trim());
         
         for (const part of costParts) {
@@ -896,7 +895,7 @@ export async function generateModule(name: string, stage: Stage, additionalInfor
     // Apply default cost if parsing failed or resulted in no costs
     const finalCost = Object.keys(parsedCost).length > 0 
         ? parsedCost 
-        : { [StationStat.WEALTH]: 2, [StationStat.SYSTEMS]: 1 }; // Default: 2 Wealth, 1 Systems
+        : { [StationStat.WEALTH]: 2, [StationStat.INFRASTRUCTURE]: 1 }; // Default: 2 Wealth, 1 Systems
 
     const module: ModuleIntrinsic = {
         name: moduleName,
@@ -922,7 +921,7 @@ export async function generateModule(name: string, stage: Stage, additionalInfor
 export async function generateModuleImage(module: ModuleIntrinsic, stage: Stage): Promise<void> {
     // Start with a base image:
     const baseImageUrl = await stage.makeImage({
-        prompt: `The detailed interior of an unoccupied room within a wizard's tower. The design should reflect the following description: ${module.imagePrompt}. ` +
+        prompt: `The detailed interior or grounds of an unoccupied building in a cozy small town. The design should reflect the following description: ${module.imagePrompt}. ` +
             `Regardless of aesthetic, the image is rendered in a vibrant, painterly style with thick smudgy lines.`,
         aspect_ratio: AspectRatio.SQUARE
     }, '');
@@ -932,7 +931,7 @@ export async function generateModuleImage(module: ModuleIntrinsic, stage: Stage)
     // Next, create a default variant with Qwen's image-to-image:
     const defaultImageUrl = await stage.makeImageFromImage({
         image: baseImageUrl,
-        prompt: `Apply a visual novel art style to this fantasy wizard tower room (${module.imagePrompt}). Remove any characters from the scene.`,
+        prompt: `Apply a visual novel art style to this cozy small-town location (${module.imagePrompt}). Remove any characters from the scene.`,
         transfer_type: 'edit'
     }, '');
     if (baseImageUrl && defaultImageUrl) {

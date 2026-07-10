@@ -24,7 +24,6 @@ interface SettingsData {
     disableEmotionImages: boolean;
     disableDecorImages: boolean;
     disableImpersonation: boolean;
-    solidSpirit: boolean;
     fastStart: boolean;
     typeOutSpeed: number;
     characterArtStyle: ArtStyle;
@@ -139,21 +138,19 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
 
     // Load existing settings or use defaults
     const [settings, setSettings] = useState<SettingsData>({
-        playerName: saveFromStage.player?.name || 'Magus',
-        playerDescription: saveFromStage.player?.description || 'The Spire\'s accidental Magus is the tower\'s sole living authority.',
+        playerName: saveFromStage.player?.name || 'Founder',
+        playerDescription: saveFromStage.player?.description || `The Founder of Second Chance Town, arrived at last to see their town come to life.`,
         aideName: saveFromStage.aide?.name || 'Soji',
         aideDescription: saveFromStage.aide?.description ||
-            (`Every respectable tower comes haunted, and the Spire is no exception! Your resident tower spirit has been bound to these stones since long before your arrival and knows the Spire's workings intimately, so you don't have to. ` +
-            `Fair warning: two centuries of empty halls have left them a touch capricious - expect teasing, dramatics, and open delight in your confusion, as your suffering is (by their own cheerful admission) the finest entertainment they've had in two hundred years. ` +
-            `Rest assured the binding compels honest service no matter how they grumble, and those who earn their trust report the needling softens into something almost like fondness.\n\n` +
-            `The Tower Spirit. "Your suffering entertains me, mortal."`),
-        directorModuleName: saveFromStage.directorModule?.name || 'Magus\'s Study',
+            (`Your right hand and the town's first employee. While you settled your affairs elsewhere, your Aide spent the final months of construction on site - chasing contractors, filing the charter paperwork, and learning every pipe, pole, and ledger of the town by heart so you don't have to. ` +
+            `The job runs well past keeping your itinerary: when the Founder can't be somewhere, the Aide goes in their stead, and anything the town needs handled lands on their list before it ever reaches your desk. ` +
+            `However you came to trust them with all of this, the trust was well placed.`),
+        directorModuleName: saveFromStage.directorModule?.name || `Founder's Manor`,
         directorModuleRoleName: saveFromStage.directorModule?.roleName || 'Maid',
         disableTextToSpeech: saveFromStage.disableTextToSpeech ?? false,
         disableEmotionImages: saveFromStage.disableEmotionImages ?? false,
         disableDecorImages: saveFromStage.disableDecorImages ?? saveFromStage.disableEmotionImages ?? false,
         disableImpersonation: saveFromStage.disableImpersonation ?? false,
-        solidSpirit: saveFromStage.solidSpirit ?? false,
         fastStart: false,
         typeOutSpeed: clampTypeOutSpeed(saveFromStage.typeOutSpeed ?? defaultTypeOutSpeed),
         characterArtStyle: saveFromStage.characterArtStyle ?? 'original',
@@ -218,7 +215,6 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
         save.disableEmotionImages = settings.disableEmotionImages;
         save.disableDecorImages = settings.disableDecorImages;
         save.disableImpersonation = settings.disableImpersonation;
-        save.solidSpirit = settings.solidSpirit;
         save.typeOutSpeed = clampTypeOutSpeed(settings.typeOutSpeed);
         save.characterArtStyle = settings.characterArtStyle;
         save.characterArtist = settings.characterArtist;
@@ -439,7 +435,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
                                 />
                             </div>
 
-                            {/* Tower Spirit Name */}
+                            {/* Aide Name */}
                             {isNewGame && (
                                 <div>
                                     <label 
@@ -452,20 +448,20 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
                                             marginBottom: '8px',
                                         }}
                                     >
-                                        Tower Spirit Name
+                                        Aide Name
                                     </label>
                                     <TextInput
                                         id="aide-name"
                                         fullWidth
                                         value={settings.aideName}
                                         onChange={(e) => handleInputChange('aideName', e.target.value)}
-                                        placeholder="Enter Tower Spirit name"
+                                        placeholder="Enter Aide name"
                                         style={{ fontSize: '16px' }}
                                     />
                                 </div>
                             )}
 
-                            {/* Tower Spirit Description */}
+                            {/* Aide Description */}
                             {isNewGame && (
                                 <div>
                                     <label 
@@ -478,14 +474,14 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
                                             marginBottom: '8px',
                                         }}
                                     >
-                                        Tower Spirit Description
+                                        Aide Description
                                     </label>
                                     <textarea
                                         id="aide-description"
                                         className="text-input-primary"
                                         value={settings.aideDescription}
                                         onChange={(e) => handleInputChange('aideDescription', e.target.value)}
-                                        placeholder="Describe your Tower Spirit..."
+                                        placeholder="Describe your Aide..."
                                         rows={4}
                                         style={{
                                             width: '100%',
@@ -497,7 +493,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
                                 </div>
                             )}
                             
-                            {/* Magus's Room Name */}
+                            {/* Founder's Building Name */}
                             {isNewGame && (
                                 <div>
                                     <label 
@@ -510,19 +506,19 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
                                             marginBottom: '8px',
                                         }}
                                     >
-                                        Magus's Room Name
+                                        Founder's Building Name
                                     </label>
                                     <TextInput
                                         id="director-module-name"
                                         fullWidth
                                         value={settings.directorModuleName}
                                         onChange={(e) => handleInputChange('directorModuleName', e.target.value)}
-                                        placeholder="Enter Magus's Room Name"
+                                        placeholder="Enter Founder's Building Name"
                                         style={{ fontSize: '16px' }}
                                     />
                                 </div>
                             )}
-                            {/* Magus's Room Job Title */}
+                            {/* Founder's Building Job Title */}
                             {isNewGame && (
                                 <div>
                                     <label 
@@ -535,14 +531,14 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
                                             marginBottom: '8px',
                                         }}
                                     >
-                                        Magus's Room Job Title (a resident-assignable role)
+                                        Founder's Building Job Title (a resident-assignable role)
                                     </label>
                                     <TextInput
                                         id="director-module-role-name"
                                         fullWidth
                                         value={settings.directorModuleRoleName}
                                         onChange={(e) => handleInputChange('directorModuleRoleName', e.target.value)}
-                                        placeholder="Enter Magus's Room Job Title"
+                                        placeholder="Enter Founder's Building Job Title"
                                         style={{ fontSize: '16px' }}
                                     />
                                 </div>
@@ -799,66 +795,6 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
                                             }}
                                         >
                                             Disable Impersonation
-                                        </span>
-                                    </motion.div>
-
-                                    {/* Solid Spirit Toggle */}
-                                    <motion.div
-                                        whileHover={{ scale: 1.01 }}
-                                        whileTap={{ scale: 0.99 }}
-                                        onClick={() => setSettings(prev => ({ ...prev, solidSpirit: !prev.solidSpirit }))}
-                                        style={{
-                                            padding: '12px',
-                                            background: settings.solidSpirit
-                                                ? 'rgba(176, 102, 255, 0.15)'
-                                                : 'rgba(18, 8, 32, 0.7)',
-                                            border: settings.solidSpirit
-                                                ? '2px solid rgba(176, 102, 255, 0.5)'
-                                                : '2px solid rgba(255, 255, 255, 0.1)',
-                                            borderRadius: '8px',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s ease',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '8px',
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                width: '20px',
-                                                height: '20px',
-                                                borderRadius: '4px',
-                                                background: settings.solidSpirit ? '#b066ff' : 'rgba(255, 255, 255, 0.1)',
-                                                border: '2px solid ' + (settings.solidSpirit ? '#b066ff' : 'rgba(255, 255, 255, 0.3)'),
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                flexShrink: 0,
-                                                transition: 'all 0.2s ease',
-                                            }}
-                                        >
-                                            {settings.solidSpirit && (
-                                                <motion.span
-                                                    initial={{ scale: 0 }}
-                                                    animate={{ scale: 1 }}
-                                                    style={{
-                                                        color: '#1a0533',
-                                                        fontSize: '14px',
-                                                        fontWeight: 'bold',
-                                                    }}
-                                                >
-                                                    ✓
-                                                </motion.span>
-                                            )}
-                                        </div>
-                                        <span
-                                            style={{
-                                                color: settings.solidSpirit ? '#b066ff' : 'rgba(255, 255, 255, 0.7)',
-                                                fontSize: '13px',
-                                                fontWeight: settings.solidSpirit ? 'bold' : 'normal',
-                                            }}
-                                        >
-                                            Solid Spirit (No Ghostly Effect)
                                         </span>
                                     </motion.div>
 

@@ -433,7 +433,7 @@ export const ContentManagementScreen: FC<ContentManagementScreenProps> = ({ stag
                                                 Generate a New Module
                                             </div>
                                             <div style={{ fontSize: '12px', color: 'rgba(224, 240, 255, 0.6)', marginBottom: '10px', lineHeight: 1.4 }}>
-                                                Describe the room you want and the Spire will conjure it - its purpose, appearance, an assignable role, and a build cost. For example: "a moonlit observatory for reading the stars and divining the future."
+                                                Describe the building you want and the town will raise it - its purpose, appearance, an assignable role, and a build cost. For example: "a moonlit observatory for reading the stars and divining the future."
                                             </div>
                                             <textarea
                                                 value={modulePrompt}

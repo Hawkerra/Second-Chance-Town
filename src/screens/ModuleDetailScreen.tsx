@@ -309,7 +309,7 @@ export const ModuleDetailScreen: FC<ModuleDetailScreenProps> = ({ moduleId, modu
                                             <textarea
                                                 value={editedModule.skitPrompt}
                                                 onChange={(e) => handleInputChange('skitPrompt', e.target.value)}
-                                                placeholder="Room's function and role in the tower"
+                                                placeholder="Building's function and role in the town"
                                                 style={{
                                                     width: '100%',
                                                     minHeight: '80px',

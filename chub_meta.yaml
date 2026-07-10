@@ -37,7 +37,7 @@ creator_notes: "
 <div class=\"sct-section\">
   <h3>✨ Key Features</h3>
   <ul class=\"sct-feature-list\">
-    <li><strong>Volunteers Only:</strong> Every resident chose this - some knowingly, some through a wish they barely dared to speak. Approve or decline applications, or cast a wish of your own for exactly the sort of person you hope applies.</li>
+    <li><strong>Volunteers Only:</strong> Every resident chose this - some knowingly, some through a wish they barely dared to speak. Approve or decline applications, or pen direct invitations to specific people across the worlds.</li>
     <li><strong>Generative Content:</strong> Leverages Chub's generative endpoints to create character art, voice lines, and dynamic story content.</li>
     <li><strong>Dynamic Character System:</strong> Characters are loaded from Chub's library, creating unique residents and visiting envoys for every playthrough.</li>
     <li><strong>Interactive Skits:</strong> Visual novel-style scenes where your choices shape relationships, town stats, and story progression.</li>
@@ -52,7 +52,7 @@ creator_notes: "
   <h3>📊 Town Stats</h3>
   <p>Your town's wellbeing is measured across six interconnected statistics. Every decision you make affects these values:</p>
   <div style=\"margin-top: 10px;\">
-    <span class=\"sct-stat\">⚙️ Infrastructure</span> - Roads, wards, and utilities that keep the town running<br>
+    <span class=\"sct-stat\">⚙️ Systems</span> - Roads, wards, and workings that keep the town running<br>
     <span class=\"sct-stat\">🛏️ Comfort</span> - How pleasant it feels to call this place home<br>
     <span class=\"sct-stat\">🍽️ Provision</span> - Food, water, and the town stores<br>
     <span class=\"sct-stat\">🛡️ Security</span> - The watch, the wards, and peace of mind on the frontier<br>
@@ -72,27 +72,27 @@ creator_notes: "
   </div>
 
   <div class=\"sct-module\">
-    <h4>Meeting Hall</h4>
+    <h4>Waystation</h4>
     <p><strong>Role:</strong> Herald</p>
-    <p>Where the town receives the wider Crossroads: representatives from neighboring towns, guilds, and larger polities visit to arrange trade, work placements, and deals with the Founder.</p>
+    <p>The town's practical link to the wider Crossroads. Envoys arrive and depart here, trade is arranged, and residents head out to work placements in neighboring communities.</p>
   </div>
 
   <div class=\"sct-module\">
-    <h4>Public Works</h4>
-    <p><strong>Role:</strong> Engineer</p>
-    <p>Keeps the town running: power, water, roads, and the occasional stubborn mystery in the pipes. Tend the utilities and infrastructure that every other building depends on.</p>
+    <h4>Wishing Well</h4>
+    <p><strong>Role:</strong> Wellkeeper</p>
+    <p>Where the town taps the current that runs between worlds. Tend the waters and the workings that keep wishes flowing to your door.</p>
   </div>
 
   <div class=\"sct-module\">
-    <h4>Homes</h4>
+    <h4>Cottages</h4>
     <p><strong>Role:</strong> Resident | <strong>Cost:</strong> <span class=\"sct-stat\">Provision 1</span></p>
-    <p>Personal homes. Build multiple homes to house your growing population. Visit residents for intimate, personal interactions.</p>
+    <p>Personal homes. Build multiple cottages to house your growing population. Visit residents for intimate, personal interactions.</p>
   </div>
 
   <div class=\"sct-module\">
-    <h4>Tavern</h4>
-    <p><strong>Role:</strong> Host | <strong>Cost:</strong> <span class=\"sct-stat\">Provision 1</span></p>
-    <p>Warm hearth, good drink, and better company - where townsfolk and visitors gather to eat, drink, swap news, and build relationships. The social heart of your town.</p>
+    <h4>Town Square</h4>
+    <p><strong>Role:</strong> Steward | <strong>Cost:</strong> <span class=\"sct-stat\">Provision 1</span></p>
+    <p>A communal gathering space where residents eat, socialize, and build relationships. The social heart of your town.</p>
   </div>
 
   <div class=\"sct-module\">
@@ -108,27 +108,27 @@ creator_notes: "
   </div>
 
   <div class=\"sct-module\">
-    <h4>Town Hall</h4>
-    <p><strong>Role:</strong> Clerk | <strong>Cost:</strong> <span class=\"sct-stat\">Comfort 2</span> <span class=\"sct-stat\">Wealth 1</span></p>
-    <p>The Founder's office and the desks of the town staff - where permits, plans, records, and the occasional dispute get handled. <em>Requires at least 3 residents in the town.</em></p>
+    <h4>Tavern</h4>
+    <p><strong>Role:</strong> Host | <strong>Cost:</strong> <span class=\"sct-stat\">Comfort 2</span> <span class=\"sct-stat\">Wealth 1</span></p>
+    <p>Warm hearth, good drink, and better company. <em>Requires at least 3 residents in the town.</em></p>
   </div>
 
   <div class=\"sct-module\">
     <h4>Watch Post</h4>
-    <p><strong>Role:</strong> Watch Captain | <strong>Cost:</strong> <span class=\"sct-stat\">Infrastructure 1</span> <span class=\"sct-stat\">Wealth 1</span></p>
+    <p><strong>Role:</strong> Watch Captain | <strong>Cost:</strong> <span class=\"sct-stat\">Systems 1</span> <span class=\"sct-stat\">Wealth 1</span></p>
     <p>The frontier is gentle to those who respect it, but wilderness is still wilderness. Manages the town's wards, watch rotations, and defenses. <em>Requires contact with at least 3 neighboring communities.</em></p>
   </div>
 
   <div class=\"sct-module\">
-    <h4>Explorers' Guild</h4>
-    <p><strong>Role:</strong> Guildmaster | <strong>Cost:</strong> <span class=\"sct-stat\">Harmony 2</span> <span class=\"sct-stat\">Infrastructure 2</span></p>
-    <p>The frontier does not map itself. Charter expeditions into the unclaimed wilds beyond the town's wards; residents who sign on are away on expedition until they return - with stories, and perhaps more. <em>Requires at least 5 residents.</em></p>
+    <h4>Festival Grounds</h4>
+    <p><strong>Role:</strong> Organizer | <strong>Cost:</strong> <span class=\"sct-stat\">Harmony 2</span> <span class=\"sct-stat\">Systems 2</span></p>
+    <p>Fairs, feasts, and seasonal celebrations that bring the whole town - and sometimes the whole Crossroads - together. <em>Requires at least 5 residents.</em></p>
   </div>
 
   <div class=\"sct-module\">
-    <h4>Wishing Well</h4>
-    <p><strong>Role:</strong> Wellkeeper | <strong>Cost:</strong> <span class=\"sct-stat\">Infrastructure 2</span> <span class=\"sct-stat\">Wealth 2</span></p>
-    <p>Develop the plaza around the well at the heart of town, letting the Founder cast wishes of their own into the current - shaping exactly the sort of person they hope will apply for residency. No one is ever brought here against their will. <em>Requires Infrastructure stat of 5+.</em></p>
+    <h4>Invitation Desk</h4>
+    <p><strong>Role:</strong> Postmaster | <strong>Cost:</strong> <span class=\"sct-stat\">Systems 2</span> <span class=\"sct-stat\">Wealth 2</span></p>
+    <p>Pen invitations to specific people across the worlds. The calling only lands if the heart it reaches answers - no one is ever brought here against their will. <em>Requires Systems stat of 5+.</em></p>
   </div>
 
   <div class=\"sct-module\">
@@ -146,8 +146,8 @@ creator_notes: "
 <div class=\"sct-section\">
   <h3>🎮 How to Play</h3>
   <ol>
-    <li><strong>Configure settings:</strong> Define your Founder, your Aide, a custom starter building, and content preferences.</li>
-    <li><strong>Welcome residents:</strong> Review applications at the Arrivals Hall - approve, decline, or wish for someone specific at the Wishing Well.</li>
+    <li><strong>Configure settings:</strong> Define your Founder, the town's spirit steward, custom starter building, and content preferences.</li>
+    <li><strong>Welcome residents:</strong> Review applications at the Arrivals Hall - approve, decline, or pen direct invitations.</li>
     <li><strong>Raise buildings:</strong> Construct homes and community buildings to house and employ your residents.</li>
     <li><strong>Assign roles:</strong> Give residents duties managing different buildings.</li>
     <li><strong>Befriend the neighbors:</strong> Work with nearby communities to find trade and employment opportunities.</li>
@@ -193,6 +193,3 @@ state_schema:
 # so the deploy workflow mints a brand-new stage on first push.
 
 github_path: 'https://github.com/Hawkerra/Second-Chance-Town'
-
-extension_id: 'second-chance-town-67aff462a57e'
-

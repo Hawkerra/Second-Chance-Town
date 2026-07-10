@@ -59,7 +59,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
     const [, setFloorRefresh] = React.useState<number>(0);
     const forceUpdate = () => { setLayout(stage().getLayout()); setFloorRefresh(n => n + 1); };
 
-    // Renders a single Tower Activity Log entry, with an optional colored stat tag and a hover-revealed revert button.
+    // Renders a single Town Activity Log entry, with an optional colored stat tag and a hover-revealed revert button.
     const ActivityEntryRow: FC<{ entry: any; compact?: boolean }> = ({ entry, compact }) => {
         const [hovered, setHovered] = React.useState(false);
         return (
@@ -826,7 +826,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                     const dropX = Math.floor(relX / cellSizeNum);
                                     const dropY = Math.floor(relY / cellSizeNum);
                                     
-                                    // Validate drop position - must be in bounds and within the tower's circular footprint
+                                    // Validate drop position - must be in bounds and within the district's circular footprint
                                     if (dropX >= 0 && dropX < gridWidth && dropY >= 0 && dropY < gridHeight && isFootprintCell(dropX, dropY)) {
                                         handleModuleDrop(dropX, dropY);
                                     } else {
@@ -958,7 +958,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                             </motion.div>
                         ) : null}
 
-                        {/* Add-room + placeholder: only within the tower's circular footprint, and only on empty footprint cells. */}
+                        {/* Add-room + placeholder: only within the district's circular footprint, and only on empty footprint cells. */}
                         {!module && isFootprintCell(x, y) && (
                             <motion.div
                                 className="add-module-placeholder"
@@ -1002,7 +1002,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                         onClick={() => { if (canBuild) { st.buildNextFloor(); forceUpdate(); } }}
                                         whileHover={canBuild ? { scale: 1.04 } : undefined}
                                         whileTap={canBuild ? { scale: 0.96 } : undefined}
-                                        title={canBuild ? `Build the next floor (${costLabel})` : `Not enough resources (needs ${costLabel})`}
+                                        title={canBuild ? `Open the next district (${costLabel})` : `Not enough resources (needs ${costLabel})`}
                                         style={{
                                             width: '100%', height: '100%', borderRadius: 10,
                                             background: canBuild ? 'rgba(176, 102, 255, 0.18)' : 'rgba(0,0,0,0.5)',
@@ -1013,7 +1013,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                         }}
                                     >
                                         <ArrowUpward style={{ fontSize: `calc(${cellSize} * 0.22)` }} />
-                                        <div style={{ fontSize: `calc(${cellSize} * 0.085)`, fontWeight: 700, lineHeight: 1.1 }}>Build Floor</div>
+                                        <div style={{ fontSize: `calc(${cellSize} * 0.085)`, fontWeight: 700, lineHeight: 1.1 }}>New District</div>
                                         <div style={{ fontSize: `calc(${cellSize} * 0.07)`, opacity: 0.85, lineHeight: 1.1 }}>{costLabel}</div>
                                     </motion.div>
                                 );
@@ -1025,7 +1025,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                     <motion.div
                                         onClick={() => { st.setCurrentFloor(curFloor + 1); forceUpdate(); }}
                                         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-                                        title={`Go up to floor ${curFloor + 2}`}
+                                        title={`Go to district ${curFloor + 2}`}
                                         style={{
                                             width: '100%', height: '100%', borderRadius: 10,
                                             background: 'rgba(176, 102, 255, 0.12)', border: '3px solid rgba(176, 102, 255, 0.7)',
@@ -1034,7 +1034,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                         }}
                                     >
                                         <ArrowUpward style={{ fontSize: `calc(${cellSize} * 0.3)` }} />
-                                        <div style={{ fontSize: `calc(${cellSize} * 0.08)`, fontWeight: 700 }}>Floor {curFloor + 2}</div>
+                                        <div style={{ fontSize: `calc(${cellSize} * 0.08)`, fontWeight: 700 }}>District {curFloor + 2}</div>
                                     </motion.div>
                                 );
                             }
@@ -1045,7 +1045,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                     <motion.div
                                         onClick={() => { st.setCurrentFloor(curFloor - 1); forceUpdate(); }}
                                         whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-                                        title={`Go down to floor ${curFloor}`}
+                                        title={`Go to district ${curFloor}`}
                                         style={{
                                             width: '100%', height: '100%', borderRadius: 10,
                                             background: 'rgba(176, 102, 255, 0.12)', border: '3px solid rgba(176, 102, 255, 0.7)',
@@ -1054,7 +1054,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                         }}
                                     >
                                         <ArrowDownward style={{ fontSize: `calc(${cellSize} * 0.3)` }} />
-                                        <div style={{ fontSize: `calc(${cellSize} * 0.08)`, fontWeight: 700 }}>Floor {curFloor}</div>
+                                        <div style={{ fontSize: `calc(${cellSize} * 0.08)`, fontWeight: 700 }}>District {curFloor}</div>
                                     </motion.div>
                                 );
                             }
@@ -1525,7 +1525,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                     }),
                                 }}>
                                     {stationActors.length === 0 ? (
-                                        <p style={{ color: '#b066ff', opacity: 0.5, fontStyle: 'italic', fontSize: '0.85rem', fontWeight: 700, margin: 0, ...(isVerticalLayout && { gridColumn: '1 / -1' }) }}>Visit the Summoning Sanctum to summon your first residents. </p>
+                                        <p style={{ color: '#b066ff', opacity: 0.5, fontStyle: 'italic', fontSize: '0.85rem', fontWeight: 700, margin: 0, ...(isVerticalLayout && { gridColumn: '1 / -1' }) }}>Visit the Arrivals Hall to welcome your first residents. </p>
                                     ) : (
                                         stationActors.map((actor: any) => {
                                             const { visitingFaction, visitingFromFaction } = getActorVisitingStatus(actor);
@@ -1652,7 +1652,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                     {(() => {
                                         const log = [...(stage().getSave().activityLog || [])].reverse();
                                         if (log.length === 0) {
-                                            return <p style={{ color: '#b066ff', opacity: 0.5, fontStyle: 'italic', fontSize: '0.85rem', fontWeight: 700, margin: 0 }}>The tower has been quiet so far. Activity will appear here as time passes.</p>;
+                                            return <p style={{ color: '#b066ff', opacity: 0.5, fontStyle: 'italic', fontSize: '0.85rem', fontWeight: 700, margin: 0 }}>The town has been quiet so far. Activity will appear here as time passes.</p>;
                                         }
                                         return log.map((entry, i) => (
                                             <ActivityEntryRow key={entry.id || `${entry.day}-${entry.turn}-${i}`} entry={entry} compact />
@@ -1753,7 +1753,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                 {itemKey === 'patients' && (
                                     <div style={{ padding: '15px', flex: '1 1 auto', overflowY: 'auto', minHeight: 0 }}>
                                         {stationActors.length === 0 ? (
-                                            <p style={{ color: '#b066ff', opacity: 0.5, fontStyle: 'italic', fontSize: '0.85rem', fontWeight: 700 }}>Visit the Summoning Sanctum to summon new residents!</p>
+                                            <p style={{ color: '#b066ff', opacity: 0.5, fontStyle: 'italic', fontSize: '0.85rem', fontWeight: 700 }}>Visit the Arrivals Hall to welcome new residents!</p>
                                         ) : (
                                             stationActors.map((actor: any) => {
                                                 const { visitingFaction, visitingFromFaction } = getActorVisitingStatus(actor);
@@ -1861,7 +1861,7 @@ export const StationScreen: FC<StationScreenProps> = ({stage, setScreenType, isV
                                         {(() => {
                                             const log = [...(stage().getSave().activityLog || [])].reverse();
                                             if (log.length === 0) {
-                                                return <p style={{ color: '#b066ff', opacity: 0.5, fontStyle: 'italic', fontSize: '0.85rem', fontWeight: 700 }}>The tower has been quiet so far. Activity will appear here as time passes.</p>;
+                                                return <p style={{ color: '#b066ff', opacity: 0.5, fontStyle: 'italic', fontSize: '0.85rem', fontWeight: 700 }}>The town has been quiet so far. Activity will appear here as time passes.</p>;
                                             }
                                             return log.map((entry, i) => (
                                                 <ActivityEntryRow key={entry.id || `${entry.day}-${entry.turn}-${i}`} entry={entry} />

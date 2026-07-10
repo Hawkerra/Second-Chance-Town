@@ -1,5 +1,5 @@
 /*
- * This is the screen where the player can view available echo pods and choose to wake a character.
+ * This is the screen where the player can review pending residency applications and choose to approve one.
  */
 import React, { FC } from 'react';
 import { motion } from 'framer-motion';
@@ -457,8 +457,8 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 						{availableRooms.length === 0 
 							? 'No Available Quarters' 
 							: selectedActor 
-								? (selectedActor.isPrimaryImageReady ? 'Complete Summoning' : 'Still Taking Form')
-								: 'Select a Candidate'
+								? (selectedActor.isPrimaryImageReady ? 'Approve Residency' : 'Still Taking Form')
+								: 'Select an Applicant'
 						}
 					</Button>
 				)}
@@ -484,8 +484,8 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 							{availableRooms.length === 0 
 								? 'No Available Quarters' 
 								: selectedActor 
-									? (selectedActor.isPrimaryImageReady ? 'Complete Summoning' : 'Still Taking Form')
-									: 'Select a Candidate'
+									? (selectedActor.isPrimaryImageReady ? 'Approve Residency' : 'Still Taking Form')
+									: 'Select an Applicant'
 							}
 						</Button>
 					</div>

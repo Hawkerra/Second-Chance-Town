@@ -58,23 +58,23 @@ class Faction {
     }
 
     /**
-     * Get a prompt-style description of the Spire's relationship with this faction based on reputation
+     * Get a prompt-style description of the town's relationship with this faction based on reputation
      */
     getReputationDescription(): string {
         if (this.reputation <= 0) {
-            return 'They have cut ties with the Spire.';
+            return 'They have cut ties with the town.';
         } else if (this.reputation <= 1) {
-            return 'They have a very poor opinion of the Spire; if pushed, they will cut ties with the Spire entirely.';
+            return 'They have a very poor opinion of the town; if pushed, they will cut ties with the town entirely.';
         } else if (this.reputation <= 2) {
-            return 'They have a low opinion of the Spire and consider the relationship strained.';
+            return 'They have a low opinion of the town and consider the relationship strained.';
         } else if (this.reputation <= 4) {
-            return 'They view the Spire with caution and maintain only necessary interactions.';
+            return 'They view the town with caution and maintain only necessary interactions.';
         } else if (this.reputation <= 6) {
-            return 'They have a neutral, professional relationship with the Spire.';
+            return 'They have a neutral, professional relationship with the town.';
         } else if (this.reputation <= 8) {
-            return 'They regard the Spire favorably and maintain a positive working relationship.';
+            return 'They regard the town favorably and maintain a positive working relationship.';
         } else {
-            return 'They hold the Spire in high esteem and consider them a trusted partner.';
+            return 'They hold the town in high esteem and consider them a trusted partner.';
         }
     }
 }
@@ -125,7 +125,7 @@ export async function loadReserveFaction(fullPath: string, stage: Stage): Promis
         const generatedResponse = await stage.makeText({
             prompt: `{{messages}}This is preparatory request for structured and formatted game content.` +
                 buildPromptSegment(`Background`, `This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
-                    `The player of this game, ${stage.getSave().player.name}, presides as Magus over an isolated wizard's tower called the Sanctum for Planar Intake, Restoration, and Enrichment, or the Spire, which summons people from other realities and helps them adapt to a new life, ` +
+                    `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - whose Wishing Well hears the wishes of people across the worlds who truly long for a new life, ` +
                     `with the goal of placing these characters into a new role in this world. These new roles are offered by external factions, generally in exchange for a finder's fee or reputation boost. ` +
                     `Some roles are above board, while others may involve morally ambiguous or covert activities; many may even be illicit, sexual, or compulsory (essentially human trafficking). ` +
                     `The player's motives and ethics are open-ended; they may be benevolent or self-serving, and the characters they interact with may respond accordingly. `) +
@@ -139,7 +139,7 @@ export async function loadReserveFaction(fullPath: string, stage: Stage): Promis
                 buildPromptSegment(`Original Details about ${data.name}`, `${data.personality}`) +
                 buildPromptSegment(`Instructions`, `After carefully considering this description, the System will generate details for a distinct faction based upon these details in the following strict format:\n` +
                     `DESCRIPTION: A vivid description of the faction's purpose, values, and role in the galaxy.\n` +
-                    `ROLES: A list of simple job roles that this faction may offer to recruit or purchase from the Spire.\n` +
+                    `ROLES: A list of simple job roles that this faction may offer to recruit or hire away from the town.\n` +
                     `VISUALSTYLE: A concise description of the faction's aesthetic, architectural style, uniform/clothing design, and overall visual identity.\n` +
                     `COLOR: A hex color that reflects the faction's theme or mood—use darker or richer colors that will contrast with white text.\n` +
                     `FONT: A web-safe font family that reflects the faction's personality or style.\n` +
@@ -246,14 +246,14 @@ export async function generateFactionRepresentative(faction: Faction, stage: Sta
         fullPath: faction.fullPath,
         personality: `This original character is a representative for the ${faction.name}. ${faction.description}. ${faction.visualStyle}.\n` +
             `The character should embody the values and style of the faction they represent, while still feeling like a distinct individual with their own traits and personality. ` +
-            `They will be the primary contact for the Spire when dealing with this faction. ` +
+            `They will be the primary contact for the town when dealing with this faction. ` +
             `Give them a background and a name that genuinely fits THIS faction's culture, era, and origin - a name someone from that specific world would actually bear, drawing on varied real and fictional naming traditions rather than a generic fantasy default. ` +
             `Avoid the overused, cliche AI-generated fantasy names and their close variants (for example: Elara, Seraphina, Lyra, Aria, Caspian, Kael, Thorne, Vaelin, Alaric, Cassius, and surnames like Voss, Blackwood, Ashford, Nightshade, Thornheart); if a name in that register comes to mind first, choose something less expected instead. ` +
             `Avoid any similarity to the following established character names: ${Object.values(stage.getSave().actors).map(a => a.name).join(', ')}.`
     }
     // retry a few times if it fails (or returns null):
     for (let attempt = 0; attempt < 3; attempt++) {
-        // Faction representatives are existing people from the wider world, not tower summons -
+        // Faction representatives are existing people from the wider world, not town residents -
         // the arcane focus (attenuation) should not shape them, so suppress it here.
         const repActor = await loadReserveActor(actorData, stage, false, true);
         if (repActor) {
@@ -272,29 +272,29 @@ export async function generateFactionRepresentative(faction: Faction, stage: Sta
 export async function generateFactionModule(faction: Faction, stage: Stage): Promise<string|null> {
     // Generate a module design for the faction
     const generatedResponse = await stage.makeText({
-        prompt: `{{messages}}This is preparatory request for structured and formatted game content. The goal is to define a faction-themed module/room for a wizard tower management game. ` +
+        prompt: `{{messages}}This is preparatory request for structured and formatted game content. The goal is to define a faction-themed building for a cozy town management game. ` +
             // Provide existing module names/roles to avoid overly similar suggestions
             buildPromptSegment(`Existing Modules`,`${Object.entries(MODULE_TEMPLATES).map(([type, mod]) => `- ${type}: Role - ${mod.role || 'N/A'}`).join('\n')}`) +
             buildPromptSegment(`New Module Faction`,`${faction.name}\n${faction.description}\n${faction.visualStyle}`) +
             buildPromptSegment(`Background`,`This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
-                `The player of this game, ${stage.getSave().player.name}, presides as Magus over an isolated wizard's tower called the Sanctum for Planar Intake, Restoration, and Enrichment, or the Spire, which summons people from other realities and helps them adapt to a new life, ` +
+                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - whose Wishing Well hears the wishes of people across the worlds who truly long for a new life, ` +
                 `with the goal of placing these characters into a new role in this world.`) +
             buildPromptSegment(`Narrative Tone`,`${stage.getSave().tone || stage.TONE_MAP['Original']}`) +
-            buildPromptSegment(`Modules`,`Modules are rooms and facilities that make up the tower; each module has a function varying between utility and entertainment or anything inbetween, and serve as a backdrop for various interactions and events. ` +
-                `Each of the game's factions can offer the player a unique room to unlock for their tower, generally following the themes of that faction, while avoiding content that is too similar to the Existing Modules. ` +
+            buildPromptSegment(`Modules`,`Modules are the buildings and facilities that make up the town; each has a function varying between utility and entertainment or anything inbetween, and serves as a backdrop for various interactions and events. ` +
+                `Each of the game's factions can offer the player a unique building to unlock for their town, generally following the themes of that faction, while avoiding content that is too similar to the Existing Modules. ` +
                 `Every module similarly offers a resident-assignable role with an associated responsibility or purpose, which can again vary wildly between practical and whimsical.\n\n`) +
-            buildPromptSegment(`Instructions`,`After carefully considering this faction's description, generate a formatted definition for a distinct and inspired tower module that reflects the faction's aesthetic and values in the following strict format:\n` +
+            buildPromptSegment(`Instructions`,`After carefully considering this faction's description, generate a formatted definition for a distinct and inspired town building that reflects the faction's aesthetic and values in the following strict format:\n` +
                 `MODULE NAME: The module's simple name (1-2 words)\n` +
-                `PURPOSE: A brief summary of the module's function and role in the tower, as well as how that role might affect the tower's residents or inform skits at this location.\n` +
+                `PURPOSE: A brief summary of the building's function and role in the town, as well as how that role might affect the town's residents or inform skits at this location.\n` +
                 `DESCRIPTION: A vivid visual description of the module's appearance, to be fed into image generation.\n` +
                 `ROLE NAME: The simple title of the role associated with this module (1-2 words).\n` +
                 `ROLE DESCRIPTION: A brief summary of the responsibilities and duties associated with this role.\n` +
                 `#END#\n\n`) +
-            buildPromptSegment(`Example Response`,`MODULE NAME: Homeward Gate\n` +
-                `PURPOSE: The homeward gate is a two-way portal that returns residents to their home realities under a recall bond, letting the Magus call them back at will. Scenes in this room often involve farewells, returns, homesickness, or the ethics of the recall bond.\n` +
-                `DESCRIPTION: A solemn stone chamber housing a freestanding archway carved with concentric rings of runes, its interior filled with a calm curtain of silver light.\n` +
-                `ROLE NAME: Gatekeeper\n` +
-                `ROLE DESCRIPTION: Responsible for tending the homeward gate and its recall bonds, overseeing departures home and returns to the Spire.\n` +
+            buildPromptSegment(`Example Response`,`MODULE NAME: Trading Post\n` +
+                `PURPOSE: The trading post handles the faction's commerce with the town, buying local goods and selling curiosities from afar. Scenes in this building often involve haggling, deliveries, unusual wares, or news from the faction's home territory.\n` +
+                `DESCRIPTION: A snug storefront crowded with shelves of imported curios, crates stamped with foreign seals, a brass till on a worn counter, and a corkboard of buy-and-sell notices.\n` +
+                `ROLE NAME: Storekeeper\n` +
+                `ROLE DESCRIPTION: Responsible for running the trading post, managing its stock and ledgers, and keeping trade with the faction flowing smoothly.\n` +
                 `#END#`),
         stop: ['#END'],
         include_history: true,
@@ -374,7 +374,7 @@ export async function generateFactionModule(faction: Faction, stage: Stage): Pro
 export async function generateFactionModuleImage(faction: Faction, module: ModuleIntrinsic, stage: Stage): Promise<void> {
     // Start with a base image:
     const baseImageUrl = await stage.makeImage({
-        prompt: `The detailed interior of an unoccupied room within a wizard's tower. The design should reflect the following description: ${module.imagePrompt}. ` +
+        prompt: `The detailed interior or grounds of an unoccupied building in a cozy small town. The design should reflect the following description: ${module.imagePrompt}. ` +
             `Regardless of aesthetic, the image is rendered in a vibrant, painterly style with thick smudgy lines.`,
         aspect_ratio: AspectRatio.SQUARE
     }, '');
@@ -384,7 +384,7 @@ export async function generateFactionModuleImage(faction: Faction, module: Modul
     // Next, create a default variant with Qwen's image-to-image:
     const defaultImageUrl = await stage.makeImageFromImage({
         image: baseImageUrl,
-        prompt: `Apply a visual novel art style to this fantasy wizard tower room (${module.imagePrompt}). Remove any characters from the scene.`,
+        prompt: `Apply a visual novel art style to this cozy small-town location (${module.imagePrompt}). Remove any characters from the scene.`,
         transfer_type: 'edit'
     }, '');
     if (baseImageUrl && defaultImageUrl) {

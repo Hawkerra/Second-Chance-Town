@@ -15,8 +15,8 @@ interface LoadingScreenProps {
 
 const LOADING_PHASES = [
     { message: "Generating content (this may take a while)", duration: 15000, progress: 20 },
-    { message: "Expanding Tower Spirit details.", duration: 15000, progress: 50 },
-    { message: "Visualizing Tower Spirit.", duration: 30000, progress: 75 },
+    { message: "Expanding Aide details.", duration: 15000, progress: 50 },
+    { message: "Visualizing the Aide.", duration: 30000, progress: 75 },
     { message: "Wrapping up", duration: Infinity, progress: 90 },
 ];
 
@@ -100,7 +100,7 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({ stage, setScreenType }) 
                         textAlign: 'center',
                     }}
                 >
-                    Awakening the Tower Spirit
+                    Meeting the Aide
                 </Typography>
 
                 <Box sx={{ width: '100%', marginBottom: 2 }}>

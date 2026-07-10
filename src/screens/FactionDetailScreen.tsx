@@ -554,7 +554,7 @@ export const FactionDetailScreen: FC<FactionDetailScreenProps> = ({ faction, sta
                                             <textarea
                                                 value={editedFaction.moduleSkitPrompt}
                                                 onChange={(e) => handleInputChange('moduleSkitPrompt', e.target.value)}
-                                                placeholder="Room's function and role in the tower"
+                                                placeholder="Building's function and role in the town"
                                                 style={{
                                                     width: '100%',
                                                     minHeight: '80px',

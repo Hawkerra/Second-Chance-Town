@@ -170,7 +170,7 @@ export const AttenuationScreen: FC<AttenuationScreenProps> = ({stage, setScreenT
 							textAlign: 'center'
 						}}
 					>
-						Request specific characters or apply modifiers to newly summoned characters.
+						Wish for specific people, or shape the traits of the applicants the Well hears.
 					</Typography>
 
 					<Box sx={{ display: 'flex', flexDirection: 'column', gap: isVerticalLayout ? 2 : 2.5 }}>
@@ -245,7 +245,7 @@ export const AttenuationScreen: FC<AttenuationScreenProps> = ({stage, setScreenT
 								rows={isVerticalLayout ? 3 : 4}
 								value={modifierText}
 								onChange={(e) => setModifierText(e.target.value)}
-								placeholder="Describe traits, themes, or characteristics to impose upon newly summoned characters..."
+								placeholder="Describe traits, themes, or characteristics to wish for in new applicants..."
 								variant="outlined"
 								sx={{
 									'& .MuiOutlinedInput-root': {

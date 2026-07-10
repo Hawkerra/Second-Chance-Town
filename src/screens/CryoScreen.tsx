@@ -1,5 +1,5 @@
 /*
- * This is the screen where the player can manage characters in cryostasis.
+ * This is the screen where the player can manage residents away on Explorers' Guild expeditions.
  * Characters can be placed into cryo (locationId set to "cryo") or woken up.
  */
 import React, { FC } from 'react';
@@ -149,12 +149,12 @@ export const CryoScreen: FC<CryoScreenProps> = ({stage, setScreenType, isVertica
 		});
 
 		// Add timeline event
-		stage().pushToTimeline(stage().getSave(), `${actor.name} sent home through the Homeward Gate.`, 
+		stage().pushToTimeline(stage().getSave(), `${actor.name} set out on an expedition with the Explorers' Guild.`, 
 			{
 				actorId: actor.id,
 				type: SkitType.ENTER_CRYO,
 				moduleId: stage().getSave().layout.getModulesWhere(m => m?.type === 'cryo bank')[0]?.id || '',
-				summary: `${actor.name} was sent home through the Homeward Gate.`,
+				summary: `${actor.name} set out on an expedition with the Explorers' Guild.`,
 				script: [],
 				context: {}
 			}
@@ -420,7 +420,7 @@ export const CryoScreen: FC<CryoScreenProps> = ({stage, setScreenType, isVertica
 									padding: 'clamp(12px, 2.5vmin, 24px)',
 									transition: 'color 0.3s ease'
 								}}>
-									{selectedStationActorId ? 'Tap here to send this character home' : 'Drag or tap a character above, then tap a slot to send them home'}
+									{selectedStationActorId ? 'Tap here to send this character on expedition' : 'Drag or tap a character above, then tap a slot to send them on expedition'}
 								</div>
 							)}
 								</motion.div>

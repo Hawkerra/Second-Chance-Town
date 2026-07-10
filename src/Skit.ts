@@ -30,7 +30,7 @@ export interface Outcome {
     outfit?: { id: string; actorId: string; outfitName: string; description: string }; // Required for new outfit
     actor?: { name: string; personality: string, locationId: string, factionId?: string }; // Required for newActor
     activityLine?: string; // Required for towerActivity: the single-sentence activity description
-    activityStat?: StationStat; // Optional for towerActivity: a tower stat nudged by the activity
+    activityStat?: StationStat; // Optional for towerActivity: a town stat nudged by the activity
     activityAmount?: number; // Optional for towerActivity: +1 or -1 (clamped in code)
 }
 
@@ -99,32 +99,30 @@ export function generateSkitTypePrompt(skit: SkitData, stage: Stage, continuing:
     const actor = stage.getSave().actors[skit.actorId || ''];
     const module = stage.getSave().layout.getModuleById(skit.moduleId || '');
     const faction = stage.getSave().factions[skit.context.factionId || ''];
-    const notHereText = 'This audience is conducted through a scrying projection; no representative is physically present at the tower. ';
+    const notHereText = `This meeting is held over the Meeting Hall's crackling radio line; no representative is physically present in town. `;
     switch (skit.type) {
         case SkitType.BEGINNING:
             return !continuing ?
-                `This scene introduces the beginning of the story. The player, ${stage.getSave().player.name}, has just been pulled into the Spire's summoning sanctum by an enchanted tome ` +
-                `that identified them as matching a set of traits its late owner spent years searching for - a search left quietly running for nearly two hundred years. The tower's spirit steward, ${stage.getSave().aide.name}, greets the bewildered new arrival, ` +
-                `explains that the former Magus perished long ago at the claws of a dragon, and - as ${stage.getSave().player.name} is the first living soul to set foot in the Spire since - bestows upon them the late Magus's title, effects, and responsibilities. ` +
-                `${stage.getSave().aide.name} suspects, based on what they knew of their late master, that the search parameters described a prospective spouse or concubine, though they were never told the reasons and would rather not speculate further. ` +
-                `They may gleefully dub ${stage.getSave().player.name} the late Magus's "magic-order bride" or "magic-order groom" (whichever suits ${stage.getSave().player.name}'s description), a tease they fully intend to keep using. ` +
-                `Crucially, ${stage.getSave().aide.name} must make clear that the same one-way magic that pulled ${stage.getSave().player.name} here binds them to the tower: the Magus cannot leave, and the surrounding jungle and ruins make it moot regardless. If ${stage.getSave().player.name} wants anything done around the Spire, they will have to summon other unfortunate souls to help. ` +
-                `${stage.getSave().aide.name} should then point ${stage.getSave().player.name} toward the summoning sanctum and helpfully explain the summoning process, noting that a good many souls have likely been stuck waiting in the summoning queue for ages and really ought to be pulled through soon, before they risk crumbling into arcane dust. ` +
-                `${stage.getSave().aide.name} has kept the tower stable but could not conduct summonings without a Magus, so they are relieved to have someone take on the role and eager to get back to the business of the Sanctum. This scene must end before bringing any additional residents into the tower; ` +
+                `This scene introduces the beginning of the story. Today is move-in day: the player, ${stage.getSave().player.name}, is the Founder of a brand-new town on the edge of the Crossroads - a realm between realms, where the roads of countless worlds meet - and is arriving to see their town completed for the first time. ` +
+                `The town is ${stage.getSave().player.name}'s own project from charter to cornerstone, but they lived elsewhere during the months of construction while the essential buildings went up. Their Aide, ${stage.getSave().aide.name}, has been on site overseeing the final stretch and greets them on arrival. ` +
+                `Draw the tone of this meeting or reunion entirely from ${stage.getSave().aide.name}'s description; do not assume any particular relationship between them beyond the working one. ` +
+                `In the course of showing ${stage.getSave().player.name} around, ${stage.getSave().aide.name} should establish the town's premise: at the heart of town, the Wishing Well taps the deep current that runs between worlds, and that current carries wishes. ` +
+                `Anyone, in any world, who truly and sincerely longs for a new life may have their wish heard - and delivered to the Founder's desk as an application for residency. No one arrives who does not want to be here, and the road home always remains open. ` +
+                `The town itself is a sleepy, modern-ish place - power and plumbing humming courtesy of the Public Works - with fresh paint, quiet streets, and every door waiting for someone to live behind it. ` +
+                `${stage.getSave().aide.name} notes that the first applications are already waiting, and is eager to see the town come to life. This scene must end before bringing any additional residents into the town; ` +
                 `this process is handled via a separate game mechanic.` :
-                `Continue this introductory scene, expanding on the initial situation and context as the tower's spirit steward, ${stage.getSave().aide.name}, ` +
-                `welcomes the accidentally summoned ${stage.getSave().player.name} and names them the new Magus of the otherwise-empty Spire, possibly teasing them as their late master's magic-order bride or groom, as suits their description. ` +
-                `${stage.getSave().aide.name} should explain the Spire's core premise: its apparatus summons living people one way down the leyline current from their home realities, it was never built to send anyone back, and an incomplete summoning is believed to leave nothing but arcane dust - so completing each one is a mercy, and the blame for the abductions rests with the strange system the late Magus built. ` +
-                `The spirit was unable to conduct summonings without a Magus, so they are eager to get back to business, drawing in new residents and helping them find their place in this world (and, perhaps someday, a way home). ` +
-                `Once the concept is established, use a "[SUMMARY]" tag to summarize the scene before moving on. This scene must end before bringing any additional residents into the tower; ` +
+                `Continue this introductory scene, expanding on the initial situation as ${stage.getSave().aide.name} welcomes ${stage.getSave().player.name} to the town they founded and walks them through it on move-in day. ` +
+                `${stage.getSave().aide.name} should establish the core premise: the Wishing Well at the heart of town taps the current that runs between worlds, carrying the wishes of anyone who truly longs for a new life; heard wishes arrive as applications for residency on the Founder's desk, no one comes here unwillingly, and the road home is always open. ` +
+                `Draw the dynamic between ${stage.getSave().aide.name} and ${stage.getSave().player.name} entirely from ${stage.getSave().aide.name}'s description, without assuming any particular relationship beyond the working one. ` +
+                `Once the concept is established, use a "[SUMMARY]" tag to summarize the scene before moving on. This scene must end before bringing any additional residents into the town; ` +
                 `this process is handled via a separate game mechanic; use the "[SUMMARY]" tag to summarize the events of this intro and end the scene before that occurs.`;
         case SkitType.INTRO_CHARACTER:
             return !continuing ? 
-                `This scene will introduce a new character, ${actor.name}, fresh from the summoning circle - drawn from their home reality without their consent, with no way back for now. ${actor.name} will have no knowledge of this world. Establish their personality, their reaction to their arrival, and possibly some motivations.` :
+                `This scene will introduce a new character, ${actor.name}, newly arrived through the Arrivals Hall. ${actor.name} wished - knowingly or not - for a new life, and that wish was heard; they may be surprised by the mechanism, but some part of them meant it. They will have little or no knowledge of this world. Establish their personality, their reaction to their arrival, the shape of the wish that brought them here, and possibly some motivations.` :
                 `Continue the introduction of ${actor.name}, expanding on their personality or motivations.`;
         case SkitType.VISIT_CHARACTER:
             return !continuing ?
-                `This scene depicts the player's visit with ${actor.name} in ${actor.name}'s chambers, which have been redecorated to match ${actor.name}'s style (${actor.style}). Bear in mind that ${actor.name} is from another world, and may be unaware of details of this one. ` +
+                `This scene depicts the player's visit with ${actor.name} in ${actor.name}'s home, which has been redecorated to match ${actor.name}'s style (${actor.style}). Bear in mind that ${actor.name} is from another world, and may be unaware of details of this one. ` +
                     `Potentially explore ${actor.name}'s thoughts, feelings, or troubles in this intimate setting.` :
                 `Continue this scene with ${actor.name}, potentially exploring their thoughts, feelings, or troubles in this intimate setting.`;
         case SkitType.RANDOM_ENCOUNTER:
@@ -138,22 +136,22 @@ export function generateSkitTypePrompt(skit: SkitData, stage: Stage, continuing:
                 (offStationCharacter ? `${offStationCharacter.name}, who has been away on assignment, might be scheduled to return now (or perhaps is returning unexpectedly early). This scene may feature discussion about their return or depict the actual moment of return.` : null),
                 // If it's been a few days since 'birth' and this character has no role nd there are muliple open roles, this character may express an interestin in an unfilledd position:
                 (centralCharacter && (stage.getSave().layout.getModulesWhere(module => module.ownerId === centralCharacter.id && module.type !== 'quarters').length === 0) && (stage.getSave().day - (stage.getSave().timeline?.find(event => event.skit?.actorId === centralCharacter.id && event.skit?.type === SkitType.INTRO_CHARACTER)?.day || stage.getSave().day) >= 3) ?
-                    `Having been at the Spire for a few days now, ${centralCharacter.name} may express an interest in taking on one of the unoccupied roles around the tower; consider whether any of the current options make sense: ${stage.getSave().layout.getModulesWhere(module => module.type !== 'quarters' && !module.ownerId).map(module => `${module.getAttribute('role')} (${module.getAttribute('name')})`).join(', ')}. ` : null),
+                    `Having been in town for a few days now, ${centralCharacter.name} may express an interest in taking on one of the unoccupied roles around town; consider whether any of the current options make sense: ${stage.getSave().layout.getModulesWhere(module => module.type !== 'quarters' && !module.ownerId).map(module => `${module.getAttribute('role')} (${module.getAttribute('name')})`).join(', ')}. ` : null),
                 // The character could express an interest in an unowned module (if there are some unowned modules)
                 (centralCharacter && Object.keys(MODULE_TEMPLATES).some(moduleType => stage.getSave().layout.getModulesWhere(module => module.type === moduleType).length === 0) ?
-                    `${centralCharacter.name} may express an interest in adding a room that the Spire is currently missing; consider whether any of these options make sense: ${Object.keys(MODULE_TEMPLATES).filter(moduleType => stage.getSave().layout.getModulesWhere(module => module.type === moduleType).length === 0).map(moduleType => `${MODULE_TEMPLATES[moduleType].name}`).join(', ')}. ` : null),
+                    `${centralCharacter.name} may express an interest in adding a building that the town is currently missing; consider whether any of these options make sense: ${Object.keys(MODULE_TEMPLATES).filter(moduleType => stage.getSave().layout.getModulesWhere(module => module.type === moduleType).length === 0).map(moduleType => `${MODULE_TEMPLATES[moduleType].name}`).join(', ')}. ` : null),
                 // If some faction is active and friendly, maybe talk about them:
                 (Object.values(stage.getSave().factions).some(faction => faction.active && faction.reputation >= 3) ?
-                    `Discuss the Spire's current relationships with ${Object.values(stage.getSave().factions).find(faction => faction.active && faction.reputation >= 3)?.name || 'an active and friendly faction'}, and any potential offers or missions that might be available to residents of the tower.` : null),
+                    `Discuss the town's current relationships with ${Object.values(stage.getSave().factions).find(faction => faction.active && faction.reputation >= 3)?.name || 'an active and friendly faction'}, and any potential offers or missions that might be available to residents of the town.` : null),
                 // If some station stat is high, maybe have an event that reflects that while pushing it downward:
                 (Object.values(StationStat).some(stat => (stage.getSave().stationStats?.[stat] || 3) >= 7) ?
-                    `An event occurs that reflects the Spire's high ${Object.values(StationStat).find(stat => (stage.getSave().stationStats?.[stat] || 3) >= 7) || 'Systems'} stat, but also threatens to lower it.` :  '') +
+                    `An event occurs that reflects the town's high ${Object.values(StationStat).find(stat => (stage.getSave().stationStats?.[stat] || 3) >= 7) || 'Infrastructure'} stat, but also threatens to lower it.` :  '') +
                 // If some station stat is low, maybe have an event that reflects that while pushing it up:
                 (Object.values(StationStat).some(stat => (stage.getSave().stationStats?.[stat] || 3) <= 3) ?
-                    `An event occurs that reflects the Spire's low ${Object.values(StationStat).find(stat => (stage.getSave().stationStats?.[stat] || 3) <= 3) || 'Morale'} stat, but also offers an opportunity to raise it.` :  ''),
+                    `An event occurs that reflects the town's low ${Object.values(StationStat).find(stat => (stage.getSave().stationStats?.[stat] || 3) <= 3) || 'Harmony'} stat, but also offers an opportunity to raise it.` :  ''),
                 // If there is another patient on the PARC maybe focus on centralCharacter's relationhip or thoughts on them:
                 (centralCharacter && Object.values(stage.getSave().actors).filter(actor => actor.origin === 'patient').length > 1 ?
-                    `Explore ${centralCharacter.name}'s thoughts or feelings about other residents of the Spire, such as ${Object.values(stage.getSave().actors).filter(actor => actor.origin === 'patient' && actor.id !== centralCharacter.id).map(actor => actor.name)[0]}.` : null), 
+                    `Explore ${centralCharacter.name}'s thoughts or feelings about other residents of the town, such as ${Object.values(stage.getSave().actors).filter(actor => actor.origin === 'patient' && actor.id !== centralCharacter.id).map(actor => actor.name)[0]}.` : null), 
                 // Generic suggestion:
                 `Explore the setting and what might arise from this unexpected meeting.`
             ].filter(s => s !== null);
@@ -172,29 +170,29 @@ export function generateSkitTypePrompt(skit: SkitData, stage: Stage, continuing:
         case SkitType.NEW_MODULE:
             return !continuing ?
                 `This scene depicts an exchange between the player and some of the residents regarding the opening of a new room, the ${module?.getAttribute('name') || 'unknown'}. ` :
-                `Continue this scene, exploring the residents' thoughts or feelings toward this latest addition to the Spire.`;
+                `Continue this scene, exploring the residents' thoughts or feelings toward this latest addition to the town.`;
         case SkitType.FACTION_INTRODUCTION:
             return (!continuing ?
-                `This scene introduces a new faction that would like to do business with the Magus and the Spire: ${faction?.name || 'a secret organization'}. ` +
+                `This scene introduces a new faction that would like to do business with the Founder and the town: ${faction?.name || 'a secret organization'}. ` +
                 notHereText +
-                `Describe this new faction's appearance, motivations, and initial interactions with the player Magus and other characters present at the Scrying Mirror (if any). ` :
+                `Describe this new faction's appearance, motivations, and initial interactions with the player Founder and other characters present at the Meeting Hall (if any). ` :
                 `This is an introductory scene for ${faction?.name || 'a secret organization'}. ` +
                 notHereText);
         case SkitType.FACTION_INTERACTION:
             return (!continuing ?
-                `This scene depicts an interaction between the Magus and a faction that does business with the Spire: ${faction?.name || 'a secret organization'}. ` +
+                `This scene depicts an interaction between the Founder and a faction that does business with the town: ${faction?.name || 'a secret organization'}. ` +
                 notHereText :
-                `Continue this scene between the Magus and a representative for ${faction?.name || 'a secret organization'}'s. ` + 
+                `Continue this scene between the Founder and a representative for ${faction?.name || 'a secret organization'}'s. ` + 
                 notHereText);
         case SkitType.ENTER_CRYO:
-            return `This scene depicts the Magus's decision to send ${actor.name} home through the Homeward Gate, back to their own reality under a recall bond that allows the Spire to call them back at will. ` +
-                `Explore ${actor.name}'s thoughts and feelings about going home - and about the bond - as well as any final exchanges with the player or other characters present. ` +
+            return `This scene depicts ${actor.name} setting out on an expedition chartered by the Explorers' Guild, bound for the unmapped frontier beyond town. ` +
+                `Explore ${actor.name}'s thoughts and feelings about the venture ahead, as well as any farewells or final exchanges with the player or other characters present. ` +
                 `The decision will not be reversed during this skit; it is a foregone conclusion.`;
         case SkitType.EXIT_CRYO:
-            return `This scene depicts the Magus's decision to recall ${actor.name} through the Homeward Gate after ${skit.context.days} days back in their home reality. ` +
-                `Explore ${actor.name}'s thoughts and feelings about the recall and their time away, as well as any initial exchanges with the player or other characters present. `;
+            return `This scene depicts ${actor.name}'s return to town after ${skit.context.days} days in the field on an Explorers' Guild expedition. ` +
+                `Explore ${actor.name}'s thoughts and feelings about their expedition and time away, as well as any initial exchanges with the player or other characters present. `;
         case SkitType.DIRECTOR_MODULE:
-            return `This scene takes place in the Magus's personal chamber. This scene could encompass all manner of interactions, from introspective moments alone to exchanges with other characters. `;
+            return `This scene takes place in the Founder's personal residence. This scene could encompass all manner of interactions, from introspective moments alone to exchanges with other characters. `;
         default:
             return '';
     }
@@ -213,7 +211,7 @@ function buildScriptLog(skit: SkitData, additionalEntries: ScriptEntry[] = [], s
     };
 
     const resolveFactionName = (factionId?: string): string => {
-        if (!factionId) return 'Spire';
+        if (!factionId) return 'Second Chance Town';
         return stage?.getSave().factions[factionId]?.name || factionId;
     };
 
@@ -484,7 +482,7 @@ function processMovementTag(rawTag: string, stage: Stage, skit: SkitData | undef
     let destinationModuleId = '';
     
     // Check if it's a quarters reference (e.g., "Susan's quarters" or "quarters")
-    const quartersMatch = /^(.+?)'s\s+(?:quarters|chambers)$/i.exec(destinationName);
+    const quartersMatch = /^(.+?)'s\s+(?:quarters|chambers|home|house|cottage)$/i.exec(destinationName);
     if (quartersMatch) {
         // Specific character's quarters
         const quartersOwnerName = quartersMatch[1].trim();
@@ -502,7 +500,7 @@ function processMovementTag(rawTag: string, stage: Stage, skit: SkitData | undef
         } else {
             console.warn(`Could not find quarters owner: ${quartersOwnerName}`);
         }
-    } else if (destinationName.toLowerCase().endsWith('quarters') || destinationName.toLowerCase().endsWith('chambers') || ['home', 'their room', 'another module', 'another room', 'elsewhere'].includes(destinationName.toLowerCase())) {
+    } else if (destinationName.toLowerCase().endsWith('quarters') || destinationName.toLowerCase().endsWith('chambers') || destinationName.toLowerCase().endsWith('home') || ['home', 'their room', 'another module', 'another room', 'elsewhere'].includes(destinationName.toLowerCase())) {
         // Character's own quarters (if they have any)
         const ownQuarters = stage.getLayout().getAllModulesWhere(m => 
             m.type === 'quarters' && m.ownerId === matched.id
@@ -512,8 +510,8 @@ function processMovementTag(rawTag: string, stage: Stage, skit: SkitData | undef
         } else {
             console.warn(`${matched.name} has no quarters assigned`);
         }
-    } else if (['parc', 'spire', 'tower'].includes(destinationName.toLowerCase())) {
-        // Move to the scrying mirror by default for vague "tower" references
+    } else if (['parc', 'spire', 'tower', 'town', 'second chance town'].includes(destinationName.toLowerCase())) {
+        // Move to the meeting hall by default for vague "tower" references
         destinationModuleId = stage.getSave().layout.getAllModulesWhere(module => module.type === 'comms')[0]?.id || skit?.moduleId || '';
     } else if (skit && ['here', 'this module', 'this room', 'this location', 'this area', 'current module', 'current room'].includes(destinationName.toLowerCase())) {
         // Move to current skit module
@@ -627,14 +625,13 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
     const stationAide = save.actors[save.aide.actorId || ''];
 
     let fullPrompt = `{{messages}}` +
-        buildPromptSegment('Premise', `This is a fantasy visual novel game set in an isolated wizard's tower that summons living people from other realities: ` +
-        `the Sanctum for Planar Intake, Restoration, and Enrichment - the Spire. ` +
-        `The thrust of the game positions the player character, ${playerName}, as the Magus of the Spire, interacting with the tower's residents as they navigate this strange arcane world together. ` +
-        `The Spire stands upon a great leyline nexus amid a snarl of hostile jungle and ancient ruins; its apparatus draws living people one way down the leyline current from their home realities, without their consent. It was never built to send anyone back, and an incomplete summoning is believed to leave nothing but arcane dust, so completing each one is a mercy - the blame lies with the strange system the late Magus built. The Spire is also the only place from which a way home might ever be researched, a long-term hope for many residents. It serves as both sanctuary and containment for its diverse inhabitants, who hail from various alternate realities. ` +
-        `${playerName} is technically as much a ward of the tower as anyone, having been pulled here by an enchanted tome, and every means of leaving the tower offers appears to refuse the Magus alone; still, they hold the title and its authority (and may take residents on as staff). As a result, the Spire may feel a bit lonely or alienating at times. ` +
-        `Much of the day-to-day upkeep of the tower is handled by its spirit steward, ${save.aide.name || 'the tower spirit'}, and various servitor charms and minor animations, enabling ${playerName} to focus on the residents' care and adjustment.`) +
-        buildPromptSegment('Narrative Tone', save.tone || stage.TONE_MAP['Original']) +
-        buildPromptSegment('Tower Stats', save.stationStats ? (
+        buildPromptSegment('Premise', `This is a cozy slice-of-life visual novel game set in Second Chance Town, a brand-new frontier community on the edge of the Crossroads - a realm between realms, where the roads of countless worlds meet. ` +
+        `The thrust of the game positions the player character, ${playerName}, as the town's Founder, interacting with the residents as they all build new lives together. ` +
+        `At the heart of town, the Wishing Well taps the deep current that runs between worlds; that current carries wishes, and anyone in any world who truly and sincerely longs for a new life may have their wish heard and delivered to the Founder's desk as an application for residency. ` +
+        `No one arrives who does not want to be here, and the road home always remains open - residency is a choice, renewed by staying. ` +
+        `The town itself is a sleepy, modern-ish place of quiet streets and humming utilities, surrounded by gentle countryside that grows stranger and wilder the further out one travels; residents hail from many different worlds, eras, and walks of life, and the town welcomes them all. ` +
+        `Much of the day-to-day administration is handled by the Founder's Aide, ${save.aide.name || 'the Aide'}, enabling ${playerName} to focus on the residents' welcome and wellbeing.`) +
+        buildPromptSegment('Town Stats', save.stationStats ? (
             Object.values(StationStat).map(stat => `  ${stat} (${save.stationStats?.[stat] || 3}): ${STATION_STAT_PROMPTS[stat][getStatRating(save.stationStats?.[stat] || 3)]}`).join('\n')
         ) : '') +
         (
@@ -644,7 +641,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
                 `  ${module.getAttribute('name')} ${module.getAttribute('role') ? `(${module.getAttribute('role')} : ${module.ownerId ? `${save.actors[module.ownerId]?.name || 'Unknown'}` : 'None'})` : ''}`).join('\n'))
         ) +
         buildPromptSegment(`${playerName}'s profile`, save.player.description) +
-        (stationAide ? buildPromptSegment('Tower Spirit profile', (presentActorIds.has(stationAide.id) ? `The tower's spirit steward, ${stationAide.name}, is active in the scene.` : `\n\nThe tower's spirit steward, ${stationAide.name}, remains absent from the scene unless called upon, though they can manifest nearly anywhere in the Spire.`) + `\n${stationAide.profile}`) : '') +
+        (stationAide ? buildPromptSegment('Aide profile', (presentActorIds.has(stationAide.id) ? `The Founder's Aide, ${stationAide.name}, is active in the scene.` : `\n\nThe Founder's Aide, ${stationAide.name}, is elsewhere in town seeing to their duties unless called upon.`) + `\n${stationAide.profile}`) : '') +
         // List non-present characters for reference; just need description and profile:
         buildPromptSegment('Absent Characters (Available to Add)', absentPatients.map(actor => {
             // Roll name and current location
@@ -661,7 +658,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
                 `    Profile: ${actor.profile}\n    Role: ${roleModule?.getAttribute('role') || 'Resident'}\n    Location: ${locationString}`;
         }).join('\n')) +
         // List away characters for reference; just need description and profile:
-        buildPromptSegment('Away Characters (On Assignment Away from the Spire)', awayPatients.map(actor => {
+        buildPromptSegment('Away Characters (On Assignment Away from Town)', awayPatients.map(actor => {
             // Just role name and faction on loan to
             const roleModule = stage.getLayout().getAllModulesWhere((m: any) => 
                 m && m.type !== 'quarters' && m.ownerId === actor.id
@@ -675,7 +672,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
         }).join('\n')) +
         
         // List cryo characters for reference; just need description and profile:
-        buildPromptSegment('Characters Away Home Through the Gate (Unavailable Unless Recalled)', cryoPatients.map(actor => {
+        buildPromptSegment('Characters Away on Expedition (Unavailable Until They Return)', cryoPatients.map(actor => {
             const entranceEvent = stage.getSave().timeline?.find(event => event.skit?.actorId === actor.id && event.skit?.type === SkitType.ENTER_CRYO);
             const entranceDate = entranceEvent ? entranceEvent.day : stage.getSave().day;
             const currentOutfitId = currentActorOutfitIds[actor.id] || actor.outfitId;
@@ -692,11 +689,11 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
         (faction ? buildPromptSegment(`${faction.name} Details`, `${faction.name} Details: ${faction.description}\n${faction.name} Aesthetic:\n  ${faction.visualStyle}` +
             (factionRepresentative ? `\n${faction?.name || 'The faction'}'s representative, ${factionRepresentative.name}, appears on-screen. Their description: ${factionRepresentative.getDescription(currentActorOutfitIds[factionRepresentative.id] || factionRepresentative.outfitId)}` :
                 'They have no designated liaison for this communication; any characters introduced during this scene will be transient.')) : '') +
-        (faction ? buildPromptSegment(`${faction.name} Relationship`, `This skit may explore the nature of this faction's relationship with an intentions for the Magus, the Spire, or its residents. ` +
-            `Typically, this and other factions contact the Spire to express interest in making offers for resources, information, or residents. ` +
+        (faction ? buildPromptSegment(`${faction.name} Relationship`, `This skit may explore the nature of this faction's relationship with and intentions for the Founder, the town, or its residents. ` +
+            `Typically, this and other factions contact the town to express interest in making offers for resources, information, or residents. ` +
             `The faction could have a temporary job to offer a resident, or suggest an exchange of resources or favors. Or they could have a permanent role in mind for an ideal candidate resident. ` +
-            `If a resident is already on-loan to this faction, use this opportunity to update the Magus on their status, depict the resident's return, or convert them to a permanent placement with the faction. ` +
-            `Remember to use appropriate tags when moving characters into or out of the tower in the skit. `) : '') +
+            `If a resident is already on-loan to this faction, use this opportunity to update the Founder on their status, depict the resident's return, or convert them to a permanent placement with the faction. ` +
+            `Remember to use appropriate tags when moving characters into or out of town in the skit. `) : '') +
 
         buildPromptSegment(`Known Factions`, `${Object.values(stage.getSave().factions).filter(faction => faction.active && faction.reputation > 0).map(faction => `${faction.name}: ${faction.getReputationDescription()}`).join('\n  ')}`) +
         ((historyLength > 0 && historyPrompt) ? 
@@ -720,9 +717,9 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
             const otherOutfits = actor.outfits.filter(o => o.id !== currentOutfitId && o.emotionPack['neutral']);
             return `  ${actor.name}\n    Current Appearance (${currentOutfit.name}): ${actor.getDescription(currentOutfitId)}\n` +
                 (otherOutfits.length > 0 ? `    Other Appearances: ${otherOutfits.map(o => o.name).join(', ')}\n` : '') +
-                `    Profile: ${actor.profile}\n    Character Arc: ${actor.characterArc || 'Undetermined'}\n    Days at the Spire: ${save.day - birthDay}\n` +
+                `    Profile: ${actor.profile}\n    Character Arc: ${actor.characterArc || 'Undetermined'}\n    Days in Town: ${save.day - birthDay}\n` +
                 (roleModule ? `    Role: ${roleModule.getAttribute('role') || 'Resident'} (${actor.heldRoles[roleModule.getAttribute('role') || 'Resident'] || 0} days)\n` : '') +
-                `    Role Description: ${roleModule?.getAttribute('roleDescription') || 'This character has no assigned role at the Spire. They are to focus upon their own needs.'}\n` +
+                `    Role Description: ${roleModule?.getAttribute('roleDescription') || 'This character has no assigned role in town. They are to focus upon their own needs.'}\n` +
                 `    Stats:\n      ${Object.entries(actor.stats).map(([stat, value]) => `${stat}: ${value}`).join(', ')}`}).join('\n')}`) +
         `\n${instruction}`;
     return fullPrompt;
@@ -737,35 +734,35 @@ function buildOutcomeTagRules(exampleActor: string): string {return `\n#Characte
                             `[${exampleActor}: brawn +1, charm +2]\n` +
                             `[${exampleActor}: lust -1]\n` +
 
-                            `\n#Tower Stat Changes:#\n` +
-                            `Identify any changes to the Spire's tower stats implied or indicated by each entry. Ignore lines from the entry that simply illustrate the current stats, ` +
-                            `and instead focus on changes or developments in the Spire's situation or operations. For each change, output a line in the following format:\n` +
+                            `\n#Town Stat Changes:#\n` +
+                            `Identify any changes to the town's stats implied or indicated by each entry. Ignore lines from the entry that simply illustrate the current stats, ` +
+                            `and instead focus on changes or developments in the town's situation or operations. For each change, output a line in the following format:\n` +
                             `[STATION: <stat> +<value>(, ...)]` +
-                            `Where <stat> is the name of the tower stat to be changed, and <value> is the amount to increase or decrease the stat by (positive or negative). ` +
+                            `Where <stat> is the name of the town stat to be changed, and <value> is the amount to increase or decrease the stat by (positive or negative). ` +
                             `Multiple stat changes can be included in a single tag, separated by commas.` +
                             `Full Examples:\n` +
                             `[STATION: Stability +2, Comfort +1]\n` +
                             `[STATION: Security -1]\n` +
 
-                            `\n#Tower Activity:#\n` +
-                            `Separately, report on ONE resident of the Spire (or the tower's bound spirit) who did NOT appear in this scene, describing something they got up to elsewhere in the tower this turn. ` +
-                            `The subject MUST be either a current resident of the tower itself or the tower's bound spirit - NEVER a visiting faction representative, a member of an outside faction, or anyone away from the Spire. ` +
+                            `\n#Town Activity:#\n` +
+                            `Separately, report on ONE resident of the town (or the Founder's Aide) who did NOT appear in this scene, describing something they got up to elsewhere in town this turn. ` +
+                            `The subject MUST be either a current resident of the town itself or the Founder's Aide - NEVER a visiting faction representative, a member of an outside faction, or anyone away from town. ` +
                             `Choose a resident from the roster who was absent from the scene; favor someone with an assigned role, and let their personality and role shape what they did. ` +
                             `Output EXACTLY ONE line in this exact format:\n` +
                             `[ACTIVITY: <characterName> | <a single short sentence, no more than about 20 words> | <TAG>]\n` +
-                            `The <TAG> field is REQUIRED and must be one of: a single tower stat (Stability, Comfort, Provision, Security, Harmony, or Wealth) nudged by exactly +1 or -1, OR the literal text "No stat change". ` +
-                            `MOST activities should use "No stat change" - only OCCASIONALLY, when the activity clearly and notably helped or harmed the tower, use a stat change instead. It should feel like an occasional surprise, not routine. ` +
+                            `The <TAG> field is REQUIRED and must be one of: a single town stat (Infrastructure, Comfort, Provision, Security, Harmony, or Wealth) nudged by exactly +1 or -1, OR the literal text "No stat change". ` +
+                            `MOST activities should use "No stat change" - only OCCASIONALLY, when the activity clearly and notably helped or harmed the town, use a stat change instead. It should feel like an occasional surprise, not routine. ` +
                             `Do NOT begin the sentence with a number or digit. Keep the sentence to a single line - never a paragraph. Only ONE [ACTIVITY] tag total.\n` +
                             `Full Examples:\n` +
                             `[ACTIVITY: Mara | Spent the afternoon reorganizing the apothecary shelves, muttering about everyone's poor labeling. | Comfort +1]\n` +
                             `[ACTIVITY: Silas | Was found asleep in the Great Hall again, having missed his own watch shift. | Security -1]\n` +
-                            `[ACTIVITY: Wren | Practiced summoning-circle calligraphy for hours, purely for the joy of it. | No stat change]\n` +
+                            `[ACTIVITY: Wren | Spent hours arranging wildflowers into window boxes along the main street, purely for the joy of it. | No stat change]\n` +
 
                             `\n#Faction Reputation Changes:#\n` +
-                            `Identify any changes to the Spire's reputation with factions implied by each entry. For each change, output a line in the following format:\n` +
+                            `Identify any changes to the town's reputation with factions implied by each entry. For each change, output a line in the following format:\n` +
                             `[FACTION: <factionName> +<value>]\n` +
-                            `Where <factionName> is the name of the faction with whom the Spire's reputation is changing, and <value> is the amount to increase or decrease the reputation by (positive or negative). ` +
-                            `Reputation is a value between 1 and 10, representing the faction's opinion of the Spire, and changes are incremental. If the faction is cutting ties with the Spire, provide a large negative value. ` +
+                            `Where <factionName> is the name of the faction with whom the town's reputation is changing, and <value> is the amount to increase or decrease the reputation by (positive or negative). ` +
+                            `Reputation is a value between 1 and 10, representing the faction's opinion of the town, and changes are incremental. If the faction is cutting ties with the town, provide a large negative value. ` +
                             `Multiple faction tags can be provided in the output if, for instance, improving in the esteem of one faction inherently reduces the opinion of a rival.` +
                             `Full Examples:\n` +
                             `[FACTION: Stellar Concord +1]\n` +
@@ -773,45 +770,45 @@ function buildOutcomeTagRules(exampleActor: string): string {return `\n#Characte
 
                             `\n#Character Faction Change:#\n` +
                             `If a character has changed faction affiliations in an entry, output a line in the following format:\n` +
-                            `[CHARACTER NAME: JOINED <factionName or SPIRE>]\n` +
-                            `Where <factionName or SPIRE> is the name of the faction the character has joined, or "SPIRE" if they have left a faction to join the tower itself. ` +
+                            `[CHARACTER NAME: JOINED <factionName or TOWN>]\n` +
+                            `Where <factionName or TOWN> is the name of the faction the character has joined, or "TOWN" if they have left a faction to join the town itself. ` +
                             `Full Examples:\n` +
                             `[${exampleActor}: JOINED Stellar Concord]\n` +
-                            `[${exampleActor}: JOINED SPIRE]` +
+                            `[${exampleActor}: JOINED TOWN]` +
                             `\n\nThis tag indicates an official change in allegiance/affiliation/ownership/possession of the named character. ` +
                             `Consider this tag when the script depicts: ` +
                             `\n - A resident taking a permanent position with a faction.` +
-                            `\n - A faction representative defecting to the Spire.` +
+                            `\n - A faction representative defecting to the town.` +
                             `\n - A character being formally recruited or dismissed.` +
                             `\n - A character being sold to or imprisoned by a faction.\n` +
 
                             `\n#Character Role Change:#\n` +
-                            `If a character's role in the tower changes as a result of this entry (e.g., a resident has been assigned to a staff position), output a line in the following format:\n` +
+                            `If a character's role in town changes as a result of this entry (e.g., a resident has been assigned to a staff position), output a line in the following format:\n` +
                             `[CHARACTER NAME: ROLE <roleName>]\n` +
                             `Where <roleName> is the name of the new role assigned to the character. ` +
                             `Full Example:\n` +
                             `[${exampleActor}: ROLE Herald]\n` +
                             `[${exampleActor}: ROLE None]\n` +
-                            `The role name must directly match an existing role defined by the tower's current rooms (or "None," if a character's role is being removed by this tag).\n` +
+                            `The role name must directly match an existing role defined by the town's current buildings (or "None," if a character's role is being removed by this tag).\n` +
 
                             `\n#Character Movement/Departure:#\n` +
-                            `If the content depicts or implies that a character has departed the Spire or moved to a different faction (or such departure appears imminent), include final movement tags here.` +
+                            `If the content depicts or implies that a character has departed the town or moved to a different faction (or such departure appears imminent), include final movement tags here.` +
                             `[CHARACTER NAME moves to <room name|faction name>]\n` +
                             `Full Example:\n` +
                             `[${exampleActor} moves to Stellar Concord]\n` +
-                            `[${exampleActor} moves to Scrying Mirror]\n` +
+                            `[${exampleActor} moves to Meeting Hall]\n` +
                             `These tags ensure that the gamestate location data reflects the scene's events; it is especially important to include movement tags for any characters leaving on or returning from missions; ` +
                             `remember that moving "to" a faction is an abstract location representing a task on that faction's behalf, whether that task is at the faction location or elsewhere entirely.` +
 
                             `\n#New Module Definition:#\n` +
-                            `If the content involves the conception or design of a new room for the tower ` +
+                            `If the content involves the conception or design of a new building for the town ` +
                             `(e.g., a character requests a specific new space, or a new role is being established which requires a dedicated workspace, or a character discusses plans for a new module), ` +
                             `this tag is used to define the proposed room name and a new resident role to go with it; both the name and role must be distinct from existing rooms and roles.\n` +
                             `[NEW MODULE: <moduleName> | ROLE <roleName> | DESCRIPTION <briefDescription>]\n` +
                             `Full Example:\n` +
                             `[NEW MODULE: Alchemy Lab | ROLE Alchemist | DESCRIPTION A cluttered laboratory of bubbling alembics and reagent shelves for brewing potions and remedies.]\n` +
                             `[NEW MODULE: Music Room | ROLE Bard | DESCRIPTION A cozy chamber of instruments and comfortable seating for song and stories among the residents.]\n` +
-                            `This tag allows the game engine to create new rooms dynamically based on entry events, expanding the tower's capabilities and accommodating new character roles as needed.\n` +
+                            `This tag allows the game engine to create new rooms dynamically based on entry events, expanding the town's capabilities and accommodating new character roles as needed.\n` +
 
                             `\n#New Appearance Definition:#\n` +
                             `If the content establishes a new look for a character(s) (for example, a marked physical change) or suggests the need for an alternative appearance (such as a new uniform)—which is not represented in their current "Other Appearances" list—, utilize this tag for each new look:\n` +
@@ -826,12 +823,12 @@ function buildOutcomeTagRules(exampleActor: string): string {return `\n#Characte
                             `Full Example:\n` +
                             `[NEW CHARACTER: Alex Mercer | LOCATION Some Faction Name | FACTION Some Faction Name | DESCRIPTION A resourceful artificer with a knack for improvisation, sporting a rugged look with short-cropped hair and a perpetual five o'clock shadow.]\n` +
                             `When naming a new character, choose a name that fits their origin, culture, and any faction they belong to - drawing on varied real and fictional naming traditions rather than a generic fantasy default. Avoid the overused, cliche AI-generated fantasy names and their close variants (for example: Elara, Seraphina, Lyra, Aria, Caspian, Kael, Thorne, Vaelin, Alaric, and surnames like Voss, Blackwood, Ashford, Nightshade); if such a name comes to mind first, pick something less expected instead.\n` +
-                            `This tag allows the game engine to create new characters dynamically based on entry events, expanding the cast and introducing new dynamics to the story as needed. Location is often a faction or module where the character is initially present. Faction is an optional field to indicate if the character belongs to one of the established factions and not to the Spire; it may be provided as a faction name or faction ID. ` +
+                            `This tag allows the game engine to create new characters dynamically based on entry events, expanding the cast and introducing new dynamics to the story as needed. Location is often a faction or module where the character is initially present. Faction is an optional field to indicate if the character belongs to one of the established factions and not to the town; it may be provided as a faction name or faction ID. ` +
 
                             `\n\n` +
                             `Tags should be a fair representation of the content's direct or implied events. ` +
-                            `Bear in mind the somewhat abstract nature of character and tower stats when determining reasonable changes. ` +
-                            `All stats (tower and character) exist on a scale of 1-10, with 1 being the lowest and 10 being the highest possible value; ` +
+                            `Bear in mind the somewhat abstract nature of character and town stats when determining reasonable changes. ` +
+                            `All stats (town and character) exist on a scale of 1-10, with 1 being the lowest and 10 being the highest possible value; ` +
                             `typically, changes should be minor (+/- 1 or 2) at a time, unless something dramatic occurs.`};
 
 function shouldPreserveUnprocessedTag(rawTag: string): boolean {
@@ -853,7 +850,7 @@ function parseOutcomeTag(text: string, stage: Stage, skit: SkitData): Outcome[] 
 
     if (!text) return null;
 
-    // Tower Activity: [ACTIVITY: Name | sentence | STAT +1/-1  OR  "No stat change" (REQUIRED tag)]
+    // Town Activity: [ACTIVITY: Name | sentence | STAT +1/-1  OR  "No stat change" (REQUIRED tag)]
     const activityRegex = /ACTIVITY:\s*([^|]+)\|\s*([^|]+?)\s*\|\s*([^\]|]+?)\s*$/i;
     const activityMatch = activityRegex.exec(text);
     if (activityMatch) {
@@ -861,13 +858,13 @@ function parseOutcomeTag(text: string, stage: Stage, skit: SkitData): Outcome[] 
         let line = (activityMatch[2] || '').trim();
         const tagRaw = (activityMatch[3] || '').trim();
 
-        // Match against tower residents (and the bound tower spirit): no faction members, no one away/visiting.
-        const inTowerResidents = allActors.filter(a =>
+        // Match against town residents (and the Aide): no faction members, no one away/visiting.
+        const inTownResidents = allActors.filter(a =>
             !a.factionId &&
             !a.isOffSite(stage.getSave()) &&
             !['cryo', 'dead'].includes(a.locationId || '')
         );
-        const matchedActor = findBestNameMatch(characterNameRaw, inTowerResidents);
+        const matchedActor = findBestNameMatch(characterNameRaw, inTownResidents);
 
         // Reject: no valid resident, empty line, or a line that begins with a digit (LLM number-anchoring tic).
         if (!matchedActor || !line || /^\s*\d/.test(line)) {
@@ -929,7 +926,7 @@ function parseOutcomeTag(text: string, stage: Stage, skit: SkitData): Outcome[] 
         const matchedActor = findBestNameMatch(characterNameRaw, allActors);
         if (matchedActor) {
             let newFactionId = '';
-            if (!['PARC', 'SPIRE'].includes(factionNameRaw.toUpperCase())) {
+            if (!['PARC', 'SPIRE', 'TOWN'].includes(factionNameRaw.toUpperCase())) {
                 const matchedFaction = findBestNameMatch(factionNameRaw, allFactions);
                 if (matchedFaction) {
                     newFactionId = matchedFaction.id;
@@ -1061,7 +1058,7 @@ function parseOutcomeTag(text: string, stage: Stage, skit: SkitData): Outcome[] 
             console.log(`Matched location for new character tag: ${moduleId ? (stage.getSave().layout.getModuleById(moduleId)?.getAttribute('name') || stage.getSave().factions[moduleId]?.name || 'Unknown Location') : 'No match found'}`);
 
             let factionId = '';
-            if (!['PARC', 'SPIRE', 'NONE', 'NA', ''].includes(factionInput.toUpperCase())) {
+            if (!['PARC', 'SPIRE', 'TOWN', 'NONE', 'NA', ''].includes(factionInput.toUpperCase())) {
                 const directFaction = stage.getSave().factions[factionInput];
                 const matchedFaction = directFaction || findBestNameMatch(factionInput, allFactions);
                 factionId = matchedFaction?.id || '';
@@ -1095,7 +1092,7 @@ function parseOutcomeTag(text: string, stage: Stage, skit: SkitData): Outcome[] 
         const payload = statMatch[2].trim();
         const adjustments = payload.split(',').map(p => p.trim());
 
-        if (['STATION', 'PARC', 'TOWER', 'SPIRE'].includes(target.toUpperCase())) {
+        if (['STATION', 'PARC', 'TOWER', 'SPIRE', 'TOWN'].includes(target.toUpperCase())) {
             const outcomes: Outcome[] = [];
             for (const adj of adjustments) {
                 const m = adj.match(/([A-Za-z\s]+)\s*([+-]\s*\d+)/i);
@@ -1192,7 +1189,7 @@ export async function generateImpliedOutcomesForCurrentEnd(skit: SkitData, newEn
                     `The System will apply the Outcome Tag Rules to output outcome tags that represent the direct or implied consequences of this scene if it were to end at this moment. ` +
                     `Bear in mind existing outcome tags within the skit, avoiding redundancy or overkill. ` +
                     `Tacitly consider the implications of these interactions, and infer outcomes involving character movements/departures/arrivals (particularly for missions or other faction arrangements), ` +
-                    `impending trade or exchanges (affecting the tower's stats or resources), new rooms being discussed or designed, new looks or appearances for existing characters, ` +
+                    `impending trade or exchanges (affecting the town's stats or resources), new buildings being discussed or designed, new looks or appearances for existing characters, ` +
                     `or other developments that may be reasonably suggested by the scene's context but not captured by current tags in the script above. ` +
                     `After all relevant tags have been output by System, include an [END] tag before including any explanations for the chosen tags. ` +
                     `If no outcomes seem relevant, output [NO OUTCOMES].`)
@@ -1230,7 +1227,7 @@ export async function generateSkitSummary(skit: SkitData, stage: Stage): Promise
                 buildPromptSegment('Scene Script for Analysis', buildScriptLog(skit, skit.script, stage)) +
                 buildPromptSegment('Instruction', `The System will analyze the preceding scene script output a "[SUMMARY: <textSummary>]" tag with a brief summary of the entire scene's key events or outcomes.`)) +
             buildPromptSegment('Example Response',
-                `[SUMMARY: A faction envoy visits the Spire to make an offer to a resident, which they accept, leading to the resident's departure from the tower to join that faction permanently.]`);
+                `[SUMMARY: A faction envoy visits the town to make an offer to a resident, which they accept, leading to the resident's departure from town to join that faction permanently.]`);
         let endResponse = await stage.makeText({
             prompt: summaryPrompt,
             min_tokens: 1,
@@ -1276,14 +1273,14 @@ export async function generateSkitScript(skit: SkitData, stage: Stage): Promise<
                     (stage.getSave().disableImpersonation ? '' : `[${stage.getSave().player.name.toUpperCase()} turn] "Hey, Some Character," I greet them warmly. I'm the player, and my entries use first-person narrative voice, while all other skit entries use second-person to refer to me.\n`) +
                     `[NARRATOR turn][SOME CHARACTER moves to OTHER ROOM NAME] Some Character ducks out with a smile. You hear their boots fade away down the stairs beyond.\n` +
                     `[ANOTHER CHARACTER turn][SCENE moves to OTHER ROOM NAME][SOME CHARACTER wears FORMAL WEAR] You and Another Character follow Some Character to the other room, where they have changed into more formal attire. "[shout]We'll miss you, Some Character![]" cries Another Character, utilizing a text style tag.\n` +
-                    `[SOME CHARACTER turn][SOME CHARACTER moves to FACTION NAME] Some Character waves good-bye as they step before the scrying mirror, leaving the Spire to join Faction Name. Its surface flares bright, and then they are gone.` +
-                    `A courier charm chimes as Faction Name's payment settles into the tower's coffers.[STATION: Wealth +1]\n`
+                    `[SOME CHARACTER turn][SOME CHARACTER moves to FACTION NAME] Some Character waves good-bye as they board the afternoon coach outside the Meeting Hall, leaving town to join Faction Name.` +
+                    `The bank's courier note arrives as Faction Name's payment settles into the town's coffers.[STATION: Wealth +1]\n`
                  ) +
                 buildPromptSegment(`Ongoing Scene Log`, buildScriptLog(skit, [], stage)) +
                 buildPromptSegment(`Primary Instruction`, 
                 `${skit.script.length == 0 ? 'Produce the initial moments of a scene (perhaps joined in medias res)' : 'Extend or conclude the current scene script'} with three to five entries, ` +
                 `based upon the Premise and the specified Scene Prompt. Primarily involve the Present Characters, although Absent Characters may be moved to this location using appropriate tags, if warranted. ` +
-                `The script should tacitly consider characters' stats, relationships, past events, and the tower's stats—among other factors—to craft a compelling scene. ` +
+                `The script should tacitly consider characters' stats, relationships, past events, and the town's stats—among other factors—to craft a compelling scene. ` +
                 `\n\nFollow the structure of the strict Example Script formatting above: ` +
                 `actions are depicted in prose and character dialogue in quotation marks. Characters present their own actions and dialogue, while other events within the scene are attributed to NARRATOR. ` +
                 `Although a loose script format is employed, the actual content should be professionally edited narrative prose. ` +
@@ -1305,7 +1302,7 @@ export async function generateSkitScript(skit: SkitData, stage: Stage): Promise<
                         `<appearanceName> must be found under the specified character—either their current appearance or one of their listed alternatives.\n` +
                         `[<characterName> wears <appearanceName>]` +
                     `\n\n#Movement Tag:#\n` +
-                        `A character movement tag must be used when an Absent Character enters the scene, a present character leaves or moves to a different room of the tower, ` +
+                        `A character movement tag must be used when an Absent Character enters the scene, a present character leaves or moves to a different building in town, ` +
                         `or when a character moves to another faction, abstractly representing any faction mission or time away. ` +
                         `If "Scene" is used as the character name, it indicates that the scene itself is moving to a different location, and all present characters are moving with it.\n` +
                         `[<characterName|"Scene"> moves to <locationName|factionName|"Here"|"Another room">]` +
@@ -1330,8 +1327,8 @@ export async function generateSkitScript(skit: SkitData, stage: Stage): Promise<
                         `An end tag should be used if the new chunk of script hits a conclusory moment, where continuing makes little sense.\n` +
                         `[END]` +
                     `\n\n#Cue Notes:#\n` +
-                    `For all Character movement tags, LOCATION should be the name of an existing room (e.g., 'Scrying Mirror', 'Apothecary', 'Parlor'), a character's chambers (e.g., 'Susan's chambers' or just 'chambers' for their own), or simply "Here" to move to the scene's location or "Another room" to leave this area. ` +
-                    `If a faction name is used for the LOCATION, it indicates that the character is departing from the Spire itself, typically to visit a faction or engage in a mission or job on that faction's behalf (use the faction name as the location, even when the job is not "at" the faction). ` +
+                    `For all Character movement tags, LOCATION should be the name of an existing room (e.g., 'Meeting Hall', 'Apothecary', 'Town Hall'), a character's home (e.g., 'Susan's home' or just 'home' for their own), or simply "Here" to move to the scene's location or "Another room" to leave this area. ` +
+                    `If a faction name is used for the LOCATION, it indicates that the character is departing from the town itself, typically to visit a faction or engage in a mission or job on that faction's behalf (use the faction name as the location, even when the job is not "at" the faction). ` +
                     `The game engine relies upon movement tags to update character locations and visually display character presence in scenes, so it is essential to use these tags when Absent Characters enter the scene, Present Characters leave, or the scene itself relocates. ` +
                     `These tags are not presented to users, so the narrative content of the script should also organically mention characters entering, exiting, or relocating. `
                 ) +
@@ -1347,7 +1344,7 @@ export async function generateSkitScript(skit: SkitData, stage: Stage): Promise<
                 `The System will now craft and output multiple narrative entries/turns, developing this scene for a visual novel, utilizing tags per example and historic formatting and obeying the rules above. ` +
                 `This is a skit in a video game, so avoid major developments or concrete details which would fundamentally alter or subvert the mechanics of the game. ` +
                 (skit.script.length == 0 ? 'As this is the initial, establishing moment of a new scene, evaluate the current appearance and alternative appearances of each character and use Appearance ("wears") tags to update the characters to the most appropriate outfit for the moment. ' : '') +
-                `Generally, focus upon interpersonal dynamics, character growth, faction and resident relationships, and the Spire's state, capabilities, and inhabitants. ` +
+                `Generally, focus upon interpersonal dynamics, character growth, faction and resident relationships, and the town's state, capabilities, and inhabitants. ` +
                 `Ensure that the nature and writing of the scene suit the current Narrative Tone suggested above. ` +
                 `\n\n${alternativePrompt}` +
                 ((stage.getSave().language || 'English').toLowerCase() !== 'english' ? `\n\nNote: The game is now being played in ${stage.getSave().language}. Regardless of historic language use, generate this skit content in ${stage.getSave().language} accordingly. Special emotion, appearance, and movement tags continue to use English (these are invisible to the user).` : '') +
@@ -1902,13 +1899,13 @@ export async function updateCharacterArc(stage: Stage, skit: SkitData, actor: Ac
         buildPromptSegment(`${actor.name}'s Current Character Arc`, `${actor.characterArc || 'No established character arc.'}`) +
         buildPromptSegment(`Instruction`, 
             `Analyze the preceding scene script and ${actor.name}'s character arc, then output a revised character arc paragraph that reflects any significant developments from the latest scene script. ` +
-            `The character arc should be a concise summary of the character's growth, challenges, and changes experienced so far at the Spire. ` +
+            `The character arc should be a concise summary of the character's growth, challenges, and changes experienced so far in town. ` +
             `Focus on key emotional beats, relationships, and personal growth that have occurred up to this point. ` +
             `The System output should be a single paragraph, maintaining the same tone and style as the existing character arc.` +
             `If there are no significant developments, simply repeat the existing character arc without changes. `) +
         buildPromptSegment(`Full Examples`, 
-            `Revised Character Arc: John Smith has yet to find their footing at the Spire; they can't seem to make friends with the other residents - beyond the tower spirit - and the Magus hasn't proven trustworthy.\n[END]\n\n` +
-            `Revised Character Arc: Jane Doe has started to open up to others, forming tentative friendships. She feels a bit out of her depth in her role as Steward, but appreciates the trust the Magus has placed in her and hopes to prove that faith justified.\n[END]\n`)
+            `Revised Character Arc: John Smith has yet to find their footing in town; they can't seem to make friends with the other residents - beyond the Aide - and the Founder hasn't proven trustworthy.\n[END]\n\n` +
+            `Revised Character Arc: Jane Doe has started to open up to others, forming tentative friendships. She feels a bit out of her depth in her role as Steward, but appreciates the trust the Founder has placed in her and hopes to prove that faith justified.\n[END]\n`)
         );
     
     const requestAnalysis = await stage.makeText({
