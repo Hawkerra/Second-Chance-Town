@@ -1,4 +1,5 @@
 import Actor, { getStatDescription, findBestNameMatch, Stat, getRole } from "./actors/Actor";
+import { getTownName } from './utils';
 import { Emotion, EMOTION_MAPPING } from "./actors/Emotion";
 import { getStatRating, MODULE_TEMPLATES, STATION_STAT_PROMPTS, StationStat } from "./Module";
 import { Stage } from "./Stage";
@@ -211,7 +212,7 @@ function buildScriptLog(skit: SkitData, additionalEntries: ScriptEntry[] = [], s
     };
 
     const resolveFactionName = (factionId?: string): string => {
-        if (!factionId) return 'Second Chance Town';
+        if (!factionId) return getTownName(stage?.getSave());
         return stage?.getSave().factions[factionId]?.name || factionId;
     };
 
@@ -510,7 +511,7 @@ function processMovementTag(rawTag: string, stage: Stage, skit: SkitData | undef
         } else {
             console.warn(`${matched.name} has no quarters assigned`);
         }
-    } else if (['parc', 'spire', 'tower', 'town', 'second chance town'].includes(destinationName.toLowerCase())) {
+    } else if (['parc', 'spire', 'tower', 'town', 'second chance town'].includes(destinationName.toLowerCase()) || destinationName.toLowerCase() === getTownName(stage.getSave()).toLowerCase()) {
         // Move to the meeting hall by default for vague "tower" references
         destinationModuleId = stage.getSave().layout.getAllModulesWhere(module => module.type === 'comms')[0]?.id || skit?.moduleId || '';
     } else if (skit && ['here', 'this module', 'this room', 'this location', 'this area', 'current module', 'current room'].includes(destinationName.toLowerCase())) {
@@ -625,7 +626,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
     const stationAide = save.actors[save.aide.actorId || ''];
 
     let fullPrompt = `{{messages}}` +
-        buildPromptSegment('Premise', `This is a cozy slice-of-life visual novel game set in Second Chance Town, a brand-new frontier community on the edge of the Crossroads - a realm between realms, where the roads of countless worlds meet. ` +
+        buildPromptSegment('Premise', `This is a cozy slice-of-life visual novel game set in ${getTownName(save)}, a brand-new frontier community on the edge of the Crossroads - a realm between realms, where the roads of countless worlds meet. ` +
         `The thrust of the game positions the player character, ${playerName}, as the town's Founder, interacting with the residents as they all build new lives together. ` +
         `At the heart of town stands the Wishing Well - by every appearance an ordinary old stone well, and the town is quietly fond of it. Local lore credits it for the way wishes find this place, but it never does anything visible: it is not a portal, machine, or facility, and it must never be described as active, operational, or resonating. Somewhere between the worlds, though, anyone who truly and sincerely longs for a new life may have their wish heard - and delivered to the Founder's desk as an application for residency. ` +
         `Approved residents arrive in person through the grand double doors of the Arrivals Hall, which open from Everywhere Else at the exact moment someone fully commits to their second chance - and which will open the other way for anyone who chooses to leave. No one arrives who does not want to be here, and the road home always remains open - residency is a choice, renewed by staying. ` +

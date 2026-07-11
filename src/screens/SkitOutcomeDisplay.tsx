@@ -4,7 +4,7 @@ import { Paper, Typography, Box } from '@mui/material';
 import { TrendingUp, Handshake, TrendingDown, ContentCut, Work, DomainAdd, Output, Input, PersonAdd } from '@mui/icons-material';
 import Actor, { Stat, ACTOR_STAT_ICONS, getRole } from '../actors/Actor';
 import Nameplate from '../components/Nameplate';
-import { scoreToGrade } from '../utils';
+import { scoreToGrade, getTownName } from '../utils';
 import { StationStat, STATION_STAT_ICONS } from '../Module';
 import { Outcome } from '../Skit';
 import { Stage } from '../Stage';
@@ -316,12 +316,12 @@ const SkitOutcomeDisplay: FC<SkitOutcomeDisplayProps> = ({ outcomes, stage, layo
     const resolveActorName = (actorId?: string): string => {
         if (!actorId) return 'Unknown';
         if (actorId === 'player') return save.player.name;
-        if (actorId === 'STATION') return 'Second Chance Town';
+        if (actorId === 'STATION') return getTownName(save);
         return save.actors[actorId]?.name || actorId;
     };
 
     const resolveFactionName = (factionId?: string): string => {
-        if (!factionId) return 'Second Chance Town';
+        if (!factionId) return getTownName(save);
         return save.factions[factionId]?.name || factionId;
     };
 
@@ -933,7 +933,7 @@ const SkitOutcomeDisplay: FC<SkitOutcomeDisplayProps> = ({ outcomes, stage, layo
                                     transition={{ duration: 0.4, delay: 0.7 + actorOutcomeGroups.length * 0.2 }}
                                     style={{ marginBottom: '12px' }}
                                 >
-                                    <Nameplate name="Second Chance Town" size="large" layout="inline" />
+                                    <Nameplate name={getTownName(save)} size="large" layout="inline" />
                                 </motion.div>
                                 {stationStatEntries.length > 0 && renderStatEntries(stationStatEntries, actorOutcomeGroups.length, true)}
                                 {parcModuleEntries.length > 0 && renderParcModuleEntries(parcModuleEntries)}

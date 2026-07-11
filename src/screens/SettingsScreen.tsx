@@ -14,6 +14,7 @@ interface SettingsScreenProps {
 }
 
 interface SettingsData {
+    townName: string;
     playerName: string;
     playerDescription: string;
     aideName: string;
@@ -137,8 +138,9 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
 
     // Load existing settings or use defaults
     const [settings, setSettings] = useState<SettingsData>({
+        townName: saveFromStage.townName || 'Second Chance Town',
         playerName: saveFromStage.player?.name || 'Founder',
-        playerDescription: saveFromStage.player?.description || `The Founder of Second Chance Town, arrived at last to see their town come to life.`,
+        playerDescription: saveFromStage.player?.description || `The Founder of this little frontier town, arrived at last to see it come to life.`,
         aideName: saveFromStage.aide?.name || 'Soji',
         aideDescription: saveFromStage.aide?.description ||
             (`Your right hand and the town's first employee. While you settled your affairs elsewhere, your Aide spent the final months of construction on site - chasing contractors, filing the charter paperwork, and learning every pipe, pole, and ledger of the town by heart so you don't have to. ` +
@@ -190,6 +192,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
             placeStarterRooms();
         }
         const save = stage().getSave();
+        save.townName = settings.townName.trim() || 'Second Chance Town';
         save.player.name = settings.playerName;
         save.player.description = settings.playerDescription;
         save.aide.name = settings.aideName;
@@ -377,6 +380,30 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
 
                         {/* Settings Form */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                            {/* Town Name */}
+                            <div>
+                                <label 
+                                    htmlFor="town-name"
+                                    style={{
+                                        display: 'block',
+                                        color: '#b066ff',
+                                        fontSize: '14px',
+                                        fontWeight: 'bold',
+                                        marginBottom: '8px',
+                                    }}
+                                >
+                                    Town Name
+                                </label>
+                                <TextInput
+                                    id="town-name"
+                                    fullWidth
+                                    value={settings.townName}
+                                    onChange={(e) => handleInputChange('townName', e.target.value)}
+                                    placeholder="Second Chance Town"
+                                    style={{ fontSize: '16px' }}
+                                />
+                            </div>
+
                             {/* Player Name */}
                             <div>
                                 <label 

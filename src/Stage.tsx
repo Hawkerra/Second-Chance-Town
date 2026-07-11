@@ -1,4 +1,5 @@
 import {ReactElement} from "react";
+import { getTownName } from './utils';
 import {StageBase, StageResponse, InitialData, Message, UpdateBuilder} from "@chub-ai/stages-ts";
 import {LoadResponse} from "@chub-ai/stages-ts/dist/types/load";
 import Actor, { loadReserveActor, commitActorToEcho, Stat, generateAdditionalActorImages, loadReserveActorFromFullPath, ArtStyle, generateActorDecor, namesMatch, findBestNameMatch, generateBaseActorImage, getRole } from "./actors/Actor";
@@ -32,6 +33,7 @@ export type SaveType = {
     player: {name: string, description: string};
     aide: {name: string, description: string, actorId?: string};
     solidSpirit?: boolean; // Legacy field from the tower-spirit era; the Aide always renders normally now.
+    townName?: string; // The player-chosen town name; read via getTownName() so it always has a default.
     directorModule: {name: string, roleName: string, module?: ModuleIntrinsic};
     echoes: (Actor | null)[]; // actors currently in echo slots (can be null for empty slots)
     actors: {[key: string]: Actor};
@@ -357,6 +359,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
         this.userId = Object.values(users)[0].anonymizedId;
         this.freshSave = { player: {name: Object.values(users)[0].name, description: Object.values(users)[0].chatProfile || ''}, 
             directorModule: {name: `Founder's Manor`, roleName: 'Maid'},
+            townName: 'Second Chance Town',
             aide: {
                 name: 'Soji', 
                 description: `Your right hand and the town's first employee. While you settled your affairs elsewhere, your Aide spent the final months of construction on site - chasing contractors, filing the charter paperwork, and learning every pipe, pole, and ledger of the town by heart so you don't have to. ` +
@@ -498,7 +501,7 @@ export class Stage extends StageBase<InitStateType, ChatStateType, MessageStateT
             : `${actor.name} is the town's ${role}` +
               (proficiency >= 7 ? ` and is notably skilled at it` : proficiency <= 3 ? ` but struggles with the work` : ``) + `.`;
 
-        const prompt = `The following is a cozy town-management game set in Second Chance Town, a small frontier community at the crossroads of many worlds. ` +
+        const prompt = `The following is a cozy town-management game set in ${getTownName(this.getSave())}, a small frontier community at the crossroads of many worlds. ` +
             `Time has quietly passed. Describe, in ONE short sentence (no more than 20 words, never a paragraph), something that ${actor.name} got up to around town during this quiet stretch. ` +
             `Let their personality shape it. ${subjectContext} ` +
             `Personality/profile: ${actor.profile}\n\n` +

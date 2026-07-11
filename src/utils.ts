@@ -73,3 +73,8 @@ export function assignActorToRole(stage: Stage,
     }
 
 }
+
+/** The player-chosen town name, falling back to the default. */
+export function getTownName(save: { townName?: string } | null | undefined): string {
+    return (save?.townName || '').trim() || 'Second Chance Town';
+}

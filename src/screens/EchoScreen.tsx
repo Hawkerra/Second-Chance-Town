@@ -102,30 +102,52 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 		}
 	};
 
+	const commitActor = (selected: Actor, firstRoom: any) => {
+		// Assign the selected actor to the first available room
+		firstRoom.ownerId = selected.id;
+		generateActorDecor(selected, firstRoom, stage());
+		// Set the actor's location to the echo room:
+		const sceneRoom = stage().getSave().layout.getModulesWhere(m => m.type === 'echo chamber')[0] || firstRoom;
+		selected.locationId = sceneRoom?.id || '';
+		stage().getSave().actors[selected.id] = selected;
+		// Remove from reserve actors and echo slots
+		stage().getSave().reserveActors = (stage().getSave().reserveActors || []).filter(a => a.id !== selected.id);
+		stage().removeActorFromEcho(selected.id, false);
+        stage().setSkit({
+                type: SkitType.INTRO_CHARACTER,
+                actorId: selected.id,
+                moduleId: sceneRoom?.id,
+                script: [],
+                generating: true,
+                context: {}
+		});
+		setScreenType(ScreenType.SKIT);
+	};
+
 	const accept = () => {
 		const selected = selectedSlotIndex != null ? echoSlots[selectedSlotIndex] : null;
 		const firstRoom = stage().getSave().layout.getModulesWhere(m => m?.type === 'quarters' && !m?.ownerId)[0] || null;
 		if (selected && firstRoom && selected.isPrimaryImageReady && !!(selected.homeworld || '').trim()) {
-			// Assign the selected actor to the first available room
-			firstRoom.ownerId = selected.id;
-			generateActorDecor(selected, firstRoom, stage());
-			// Set the actor's location to the echo room:
-			const sceneRoom = stage().getSave().layout.getModulesWhere(m => m.type === 'echo chamber')[0] || firstRoom;
-			selected.locationId = sceneRoom?.id || '';
-			stage().getSave().actors[selected.id] = selected;
-			// Remove from reserve actors and echo slots
-			stage().getSave().reserveActors = (stage().getSave().reserveActors || []).filter(a => a.id !== selected.id);
-			stage().removeActorFromEcho(selected.id, false);
-            stage().setSkit({
-                    type: SkitType.INTRO_CHARACTER,
-                    actorId: selected.id,
-                    moduleId: sceneRoom?.id,
-                    script: [],
-                    generating: true,
-                    context: {}
-			});
-			setScreenType(ScreenType.SKIT);
+			commitActor(selected, firstRoom);
 		}
+	};
+
+	const waivePortraitAndApprove = () => {
+		if (!applicationActor || !appEdits) return;
+		const firstRoom = stage().getSave().layout.getModulesWhere(m => m?.type === 'quarters' && !m?.ownerId)[0] || null;
+		if (!firstRoom || !appEdits.homeworld.trim()) return;
+		const actor = applicationActor;
+		// Persist any edits from the application form first.
+		actor.setDescription(appEdits.description);
+		actor.profile = appEdits.profile;
+		actor.homeworld = appEdits.homeworld.trim();
+		// Permanently end portrait generation; rendering falls back to the original card image
+		// until the player provides custom art.
+		actor.portraitWaived = true;
+		delete stage().imageGenerationPromises[`actor/${actor.id}`];
+		setApplicationActor(null);
+		setAppEdits(null);
+		commitActor(actor, firstRoom);
 	};
 
 	const handleDragStart = (e: React.DragEvent, actor: Actor) => {
@@ -640,6 +662,26 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 									cursor: 'pointer',
 								}}
 							>File Application</button>
+							<button
+								onClick={waivePortraitAndApprove}
+								disabled={!appEdits.homeworld.trim() || availableRooms.length === 0}
+								title={availableRooms.length === 0 ? 'No available Homes to assign' : !appEdits.homeworld.trim() ? 'World of Origin is required' : 'Skip image generation and approve immediately'}
+								style={{
+									display: 'block',
+									margin: '10px auto 0',
+									padding: '8px 22px',
+									fontSize: 13,
+									fontWeight: 'bold',
+									background: 'transparent',
+									color: (!appEdits.homeworld.trim() || availableRooms.length === 0) ? '#9aa0a6' : '#e0f0ff',
+									border: `2px solid ${(!appEdits.homeworld.trim() || availableRooms.length === 0) ? 'rgba(154, 160, 166, 0.35)' : (applicationActor.themeColor || '#b066ff')}`,
+									borderRadius: 8,
+									cursor: (!appEdits.homeworld.trim() || availableRooms.length === 0) ? 'default' : 'pointer',
+								}}
+							>Waive Portrait & Approve Now</button>
+							<div style={{ textAlign: 'center', color: '#9aa0a6', fontSize: 11, marginTop: 6 }}>
+								Skips image generation permanently - the original card image is used until you provide custom art.
+							</div>
 						</motion.div>
 					</motion.div>
 				)}

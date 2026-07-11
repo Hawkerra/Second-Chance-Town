@@ -1,4 +1,5 @@
 import { Emotion, EMOTION_PROMPTS, EmotionPack } from "./Emotion";
+import { getTownName } from '../utils';
 import { Module } from "../Module";
 import { SaveType, Stage } from "../Stage";
 import { v4 as generateUuid } from 'uuid';
@@ -68,6 +69,9 @@ class Actor {
     origin: 'patient' | 'emergent' | 'faction' | 'aide' = 'patient';
     // The character's world/setting of origin: the source work's name for canon characters, or 'Original' plus a brief synopsis.
     homeworld: string = '';
+    // When true, the player has permanently waived AI portrait generation for this character;
+    // rendering falls back to the original card image until custom art is provided.
+    portraitWaived: boolean = false;
     profile: string;
     characterArc?: string;
     style: string;
@@ -425,7 +429,7 @@ export async function loadReserveActor(data: any, stage: Stage, includeHistory: 
     const generatedResponse = await stage.makeText({
         prompt: `{{messages}}This is preparatory request for structured and formatted game content.` +
             buildPromptSegment(`Background`, `This game is a cozy multiverse setting that welcomes characters from across eras, worlds, and settings. ` +
-                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
+                `The player of this game, ${stage.getSave().player.name}, is the Founder of ${getTownName(stage.getSave())}, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
                 `with the goal of welcoming these volunteers and helping them settle into a new role in this world. These new roles are offered by the town itself or by external factions, generally in exchange for a finder's fee or reputation boost. ` +
                 `Some roles are above board, while others may involve morally ambiguous or covert activities; some may even be illicit or come with strings attached. ` +
                 `The player's motives and ethics are open-ended; they may be benevolent or self-serving, and the characters they interact with may respond accordingly. `) +
@@ -596,6 +600,7 @@ export async function generateBaseActorImage(
     sourceImageUrl: string = ''
 ): Promise<void> {
     const targetOutfitId = outfitId || actor.outfitId;
+    if (actor.portraitWaived) return; // Portrait generation waived by the player.
     console.log(`Populating images for actor ${actor.name} (ID: ${actor.id})`);
     console.log(`Force regeneration: ${force}, From avatar: ${fromAvatar}, Source image URL: ${sourceImageUrl}`);
     // If the actor has no neutral emotion image in their emotion pack, generate one based on their description or from the existing avatar image
@@ -635,7 +640,7 @@ export async function generateBaseActorImage(
         
         console.log(`Generated base emotion image for actor ${actor.name} from avatar image: ${imageUrl || ''}`);
         
-        actor.setEmotionImageUrl('base', imageUrl || '', targetOutfitId);
+        if (!actor.portraitWaived) actor.setEmotionImageUrl('base', imageUrl || '', targetOutfitId);
 
         if (force) {
             // Invalidate all other emotions
@@ -649,6 +654,7 @@ export async function generateBaseActorImage(
 export async function generateAdditionalActorImages(actor: Actor, stage: Stage, outfitId: string = ''): Promise<void> {
     const targetOutfitId = outfitId || actor.outfitId;
 
+    if (actor.portraitWaived) return; // Portrait generation waived by the player.
     console.log(`Generating additional emotion images for actor ${actor.name} (ID: ${actor.id})`);
     if (actor.getEmotionImageUrl('neutral', targetOutfitId)) {
         // Generate in serial and not parallel as below:
@@ -663,6 +669,7 @@ export async function generateAdditionalActorImages(actor: Actor, stage: Stage, 
 
 export async function generateEmotionImage(actor: Actor, emotion: Emotion, stage: Stage, force: boolean = false, outfitId: string = ''): Promise<string> {
     const targetOutfitId = outfitId || actor.outfitId;
+    if (actor.portraitWaived) return ''; // Portrait generation waived by the player.
     if (actor.getEmotionImageUrl('base', targetOutfitId) && (!stage.imageGenerationPromises[`actor/${actor.id}`] || force) && (emotion == 'neutral' || !stage.getSave().disableEmotionImages)) {
         console.log(`Generating ${emotion} emotion image for actor ${actor.name}`);
         const outfit = actor.getOutfitById(targetOutfitId);
@@ -676,7 +683,7 @@ export async function generateEmotionImage(actor: Actor, emotion: Emotion, stage
         const imageUrl = await stage.imageGenerationPromises[`actor/${actor.id}`];
         delete stage.imageGenerationPromises[`actor/${actor.id}`];
         console.log(`Generated ${emotion} emotion image for actor ${actor.name}: ${imageUrl || ''}`);
-        actor.setEmotionImageUrl(emotion, imageUrl || '', targetOutfitId);
+        if (!actor.portraitWaived) actor.setEmotionImageUrl(emotion, imageUrl || '', targetOutfitId);
         return imageUrl || '';
     }
     return '';

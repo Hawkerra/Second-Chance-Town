@@ -1,4 +1,5 @@
 import { AspectRatio } from '@chub-ai/stages-ts';
+import { getTownName } from './utils';
 import { buildPromptSegment, SkitType } from './Skit';
 import { SaveType, Stage } from "./Stage";
 import Actor from './actors/Actor';
@@ -788,7 +789,7 @@ export async function generateModule(name: string, stage: Stage, additionalInfor
             buildPromptSegment(`Existing Modules`, Object.entries(MODULE_TEMPLATES).map(([type, mod]) => `- ${type}: Role - ${mod.role || 'N/A'}`).join('\n')) +
             buildPromptSegment(`New Module Details`, `Name: ${name || 'N/A'}\nNew Role: ${role || 'N/A'}\nAdditional Information: ${additionalInformation || 'N/A'}`) +
             buildPromptSegment(`Background`, `This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
-                `The player of this game, ${stage.getSave().player.name}, is the Founder of Second Chance Town, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
+                `The player of this game, ${stage.getSave().player.name}, is the Founder of ${getTownName(stage.getSave())}, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
                 `with the goal of welcoming these volunteers and helping them settle into a new role in this world. ` +
                 `Modules are the buildings and facilities that make up the town; each has a function varying between utility and entertainment or anything inbetween, and serves as a backdrop for various interactions and events. ` +
                 `Every module offers a resident-assignable role with an associated responsibility or purpose, which can again vary wildly between practical and whimsical.`) +
