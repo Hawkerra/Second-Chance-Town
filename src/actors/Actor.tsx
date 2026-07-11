@@ -72,6 +72,9 @@ class Actor {
     // When true, the player has permanently waived AI portrait generation for this character;
     // rendering falls back to the original card image until custom art is provided.
     portraitWaived: boolean = false;
+    // When true, this card depicts multiple characters in one image; image prompts are
+    // written in the plural. Auto-detected from an '&' in the name, toggleable by the player.
+    multiCharacter: boolean = false;
     profile: string;
     characterArc?: string;
     style: string;
@@ -219,6 +222,7 @@ class Actor {
     constructor(id: string, name: string, fullPath: string, avatarImageUrl: string, description: string, profile: string, style: string, voiceId: string, emotionPack: EmotionPack, stats: Record<Stat, number>, themeColor: string, themeFontFamily: string, outfitName: string = ORIGINAL_OUTFIT_NAME) {
         this.id = id;
         this.name = name;
+        this.multiCharacter = (name || '').includes('&');
         this.fullPath = fullPath;
         this.avatarImageUrl = avatarImageUrl;
         const initialOutfitName = outfitName?.trim() || ORIGINAL_OUTFIT_NAME;
@@ -620,9 +624,9 @@ export async function generateBaseActorImage(
             console.log(`Generating new image for actor ${actor.name} from description`);
             // Use stage.makeImage to create a neutral expression based on the description
             imageUrl = await stage.makeImage({
-                prompt: (`${((stage.getSave().characterArtStyle || 'original') === 'original') ? 'Illustrate this character in a hyperrealistic anime visual novel style' : ART_PROMPT[stage.getSave().characterArtStyle || 'original']}: ` +
+                prompt: pluralizeCharacterPrompt((`${((stage.getSave().characterArtStyle || 'original') === 'original') ? 'Illustrate this character in a hyperrealistic anime visual novel style' : ART_PROMPT[stage.getSave().characterArtStyle || 'original']}: ` +
                     `${actor.getDescription(targetOutfitId)}. Create a waist-up portrait of this character with a neutral expression and pose, placed on a light gray background. `)
-                    .replace('{{ARTIST}}', stage.getSave().characterArtist || 'some professional'),
+                    .replace('{{ARTIST}}', stage.getSave().characterArtist || 'some professional'), actor.multiCharacter),
                 aspect_ratio: AspectRatio.PHOTO_VERTICAL
             }, '');
             baseSourceImage = imageUrl || '';
@@ -631,9 +635,9 @@ export async function generateBaseActorImage(
         // Use stage.makeImageFromImage to create a base image.
         imageUrl = await stage.makeImageFromImage({
             image: baseSourceImage,
-            prompt: (fromAvatar ? `${ART_PROMPT[stage.getSave().characterArtStyle || 'original']}.` : '').replace('{{ARTIST}}', stage.getSave().characterArtist || 'some professional') + 
+            prompt: pluralizeCharacterPrompt((fromAvatar ? `${ART_PROMPT[stage.getSave().characterArtStyle || 'original']}.` : '').replace('{{ARTIST}}', stage.getSave().characterArtist || 'some professional') + 
                 `Create a waist-up portrait of this character to match this updated description: ${actor.getDescription(targetOutfitId)}\nGive them a neutral expression and pose and place them on a light gray background. ` +
-                `Regardless of the description, zoom and crop the image at their waist, but maintain a margin of negative space over their head/hair.`,
+                `Regardless of the description, zoom and crop the image at their waist, but maintain a margin of negative space over their head/hair.`, actor.multiCharacter),
             remove_background: true,
             transfer_type: 'edit'
         }, '');
@@ -649,6 +653,16 @@ export async function generateBaseActorImage(
         // Generate neutral but don't wait up.
         void generateEmotionImage(actor, Emotion.neutral, stage, false, targetOutfitId);
     }
+}
+
+/** Rewrites singular 'this character' phrasing to plural for multi-character cards. */
+export function pluralizeCharacterPrompt(text: string, multiCharacter: boolean): string {
+    if (!multiCharacter) return text;
+    return text
+        .replace(/\bThis character's\b/g, "These characters'")
+        .replace(/\bthis character's\b/g, "these characters'")
+        .replace(/\bThis character\b/g, 'These characters')
+        .replace(/\bthis character\b/g, 'these characters');
 }
 
 export async function generateAdditionalActorImages(actor: Actor, stage: Stage, outfitId: string = ''): Promise<void> {
@@ -676,7 +690,7 @@ export async function generateEmotionImage(actor: Actor, emotion: Emotion, stage
         const emotionPrompt = await ensureOutfitEmotionPrompt(actor, emotion, stage, targetOutfitId) || EMOTION_PROMPTS[emotion];
         stage.imageGenerationPromises[`actor/${actor.id}`] = stage.makeImageFromImage({
             image: actor.getEmotionImageUrl('base', targetOutfitId) || '',
-            prompt: `${emotionPrompt}`,
+            prompt: pluralizeCharacterPrompt(`${emotionPrompt}`, actor.multiCharacter),
             remove_background: true,
             transfer_type: 'edit'
         }, '');
@@ -691,7 +705,7 @@ export async function generateEmotionImage(actor: Actor, emotion: Emotion, stage
 
 function buildEmotionPromptGenerationInstruction(actor: Actor, outfit: Outfit, emotion: Emotion): string {
 
-    return `{{messages}}This is a preparatory request for a single image-edit instruction for character art generation.\n\n` +
+    return pluralizeCharacterPrompt(`{{messages}}This is a preparatory request for a single image-edit instruction for character art generation.\n\n` +
         buildPromptSegment(`Character details`, actor.profile) +
         buildPromptSegment(`Current outfit`, outfit.description) +
         buildPromptSegment(`Personality and public persona`, actor.profile) +
@@ -702,7 +716,8 @@ function buildEmotionPromptGenerationInstruction(actor: Actor, outfit: Outfit, e
             `Only describe elements that are relevant to the target image. Output only the final prompt text and then #END#`) +
         buildPromptSegment(`Example response`, `This woman is now in a flirty, playful mood. She smiles and leans forward slightly, with a glint in her half-lidded eyes. She blushes and plays with her hair.\n#END#\n`) +
         buildPromptSegment(`Example response`, `This man is now in a somber, reflective mood. He looks downcast, with slumped shoulders and a frown. His eyes look down and away, and he appears lost in thought.\n#END#\n`) +
-        buildPromptSegment(`Prompt`, `Output the new emotion image prompt.`);
+        (actor.multiCharacter ? buildPromptSegment(`Important`, `This card depicts MULTIPLE characters in a single image. Write the prompt in the plural, describing adjustments to these characters collectively (e.g. "These characters are now...", "They smile...").`) : '') +
+        buildPromptSegment(`Prompt`, `Output the new emotion image prompt.`), actor.multiCharacter);
 }
 
 async function ensureOutfitEmotionPrompt(actor: Actor, emotion: Emotion, stage: Stage, outfitId: string = ''): Promise<string> {

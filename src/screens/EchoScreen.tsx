@@ -647,6 +647,15 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 									/>
 								</div>
 							))}
+							<label style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#e0f0ff', fontSize: 13, marginBottom: 12, cursor: 'pointer' }}>
+								<input
+									type="checkbox"
+									checked={applicationActor.multiCharacter}
+									onChange={(e) => { applicationActor.multiCharacter = e.target.checked; stage().saveGame(); setRefreshKey(k => k + 1); }}
+									style={{ accentColor: '#b066ff', width: 16, height: 16 }}
+								/>
+								Multi-character card (use plural image prompts)
+							</label>
 							<button
 								onClick={closeApplication}
 								style={{

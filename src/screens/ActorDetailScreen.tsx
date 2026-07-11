@@ -44,6 +44,7 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
     const [editedActor, setEditedActor] = useState<{
         name: string;
         homeworld: string;
+        multiCharacter: boolean;
         profile: string;
         characterArc: string;
         style: string;
@@ -54,6 +55,7 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
     }>({
         name: actor.name,
         homeworld: actor.homeworld || '',
+        multiCharacter: !!actor.multiCharacter,
         profile: actor.profile,
         characterArc: actor.characterArc || '',
         style: actor.style,
@@ -229,6 +231,7 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
         // Update the actor in the save
         actor.name = editedActor.name;
         actor.homeworld = editedActor.homeworld;
+        actor.multiCharacter = editedActor.multiCharacter;
         actor.profile = editedActor.profile;
         actor.characterArc = editedActor.characterArc;
         actor.style = editedActor.style;
@@ -256,7 +259,7 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
         }, 500);
     };
 
-    const handleInputChange = (field: string, value: string | number) => {
+    const handleInputChange = (field: string, value: string | number | boolean) => {
         setEditedActor(prev => ({
             ...prev,
             [field]: value
@@ -850,6 +853,17 @@ export const ActorDetailScreen: FC<ActorDetailScreenProps> = ({ actor, stage, on
                                             }}
                                         />
                                     </div>
+
+                                    {/* Multi-character toggle */}
+                                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#e0f0ff', fontSize: 13, cursor: 'pointer' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={editedActor.multiCharacter}
+                                            onChange={(e) => handleInputChange('multiCharacter', e.target.checked)}
+                                            style={{ accentColor: '#b066ff', width: 16, height: 16 }}
+                                        />
+                                        Multi-character card (use plural image prompts)
+                                    </label>
 
                                     {/* Profile/Personality */}
                                     <div>
