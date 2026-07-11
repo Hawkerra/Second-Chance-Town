@@ -632,6 +632,7 @@ export function buildSkitPrompt(skit: SkitData, stage: Stage, historyLength: num
         `Approved residents arrive in person through the grand double doors of the Arrivals Hall, which open from Everywhere Else at the exact moment someone fully commits to their second chance - and which will open the other way for anyone who chooses to leave. No one arrives who does not want to be here, and the road home always remains open - residency is a choice, renewed by staying. ` +
         `The town itself is a sleepy, modern-ish place of quiet streets and humming utilities, surrounded by gentle countryside that grows stranger and wilder the further out one travels; residents hail from many different worlds, eras, and walks of life, and the town welcomes them all. ` +
         `Much of the day-to-day administration is handled by the Founder's Aide, ${save.aide.name || 'the Aide'}, enabling ${playerName} to focus on the residents' welcome and wellbeing.`) +
+        ((save.townTheme || '').trim() ? buildPromptSegment('Town Theme', `This theme or standing rule defines ${getTownName(save)} and should be woven naturally into scenes, details, and townsfolk behavior: ${(save.townTheme || '').trim()}`) : '') +
         buildPromptSegment('Town Stats', save.stationStats ? (
             Object.values(StationStat).map(stat => `  ${stat} (${save.stationStats?.[stat] || 3}): ${STATION_STAT_PROMPTS[stat][getStatRating(save.stationStats?.[stat] || 3)]}`).join('\n')
         ) : '') +

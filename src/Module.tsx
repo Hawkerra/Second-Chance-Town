@@ -791,6 +791,7 @@ export async function generateModule(name: string, stage: Stage, additionalInfor
             buildPromptSegment(`Background`, `This game is a fantasy multiverse setting that pulls characters from across eras, worlds, and settings. ` +
                 `The player of this game, ${stage.getSave().player.name}, is the Founder of ${getTownName(stage.getSave())}, a young frontier community on the edge of the Crossroads - a realm between realms - where the wishes of people across the worlds who truly long for a new life are heard and arrive as applications for residency, ` +
                 `with the goal of welcoming these volunteers and helping them settle into a new role in this world. ` +
+                ((stage.getSave().townTheme || '').trim() ? `The town's defining theme or rule, which new buildings should respect: ${(stage.getSave().townTheme || '').trim()}. ` : '') +
                 `Modules are the buildings and facilities that make up the town; each has a function varying between utility and entertainment or anything inbetween, and serves as a backdrop for various interactions and events. ` +
                 `Every module offers a resident-assignable role with an associated responsibility or purpose, which can again vary wildly between practical and whimsical.`) +
             buildPromptSegment(`Instructions`, `After carefully considering the provided details, the System will generate a formatted definition for a distinct and inspired town building that suits the prompt, outputting it in the following strict format:\n` +

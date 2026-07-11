@@ -15,6 +15,7 @@ interface SettingsScreenProps {
 
 interface SettingsData {
     townName: string;
+    townTheme: string;
     playerName: string;
     playerDescription: string;
     aideName: string;
@@ -139,6 +140,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
     // Load existing settings or use defaults
     const [settings, setSettings] = useState<SettingsData>({
         townName: saveFromStage.townName || 'Second Chance Town',
+        townTheme: saveFromStage.townTheme || '',
         playerName: saveFromStage.player?.name || 'Founder',
         playerDescription: saveFromStage.player?.description || `The Founder of this little frontier town, arrived at last to see it come to life.`,
         aideName: saveFromStage.aide?.name || 'Soji',
@@ -193,6 +195,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
         }
         const save = stage().getSave();
         save.townName = settings.townName.trim() || 'Second Chance Town';
+        save.townTheme = settings.townTheme.trim();
         save.player.name = settings.playerName;
         save.player.description = settings.playerDescription;
         save.aide.name = settings.aideName;
@@ -401,6 +404,36 @@ export const SettingsScreen: FC<SettingsScreenProps> = ({ stage, onCancel, onCon
                                     onChange={(e) => handleInputChange('townName', e.target.value)}
                                     placeholder="Second Chance Town"
                                     style={{ fontSize: '16px' }}
+                                />
+                            </div>
+
+                            {/* Town Theme */}
+                            <div>
+                                <label 
+                                    htmlFor="town-theme"
+                                    style={{
+                                        display: 'block',
+                                        color: '#b066ff',
+                                        fontSize: '14px',
+                                        fontWeight: 'bold',
+                                        marginBottom: '8px',
+                                    }}
+                                >
+                                    Town Theme (optional)
+                                </label>
+                                <textarea
+                                    id="town-theme"
+                                    className="text-input-primary"
+                                    value={settings.townTheme}
+                                    onChange={(e) => handleInputChange('townTheme', e.target.value)}
+                                    placeholder={"An optional theme or standing rule the game should honor - e.g. 'The town sits on the shore of a vast lake' or 'It is illegal to wear hats in this town'"}
+                                    rows={3}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px',
+                                        fontSize: '14px',
+                                        resize: 'vertical',
+                                    }}
                                 />
                             </div>
 
