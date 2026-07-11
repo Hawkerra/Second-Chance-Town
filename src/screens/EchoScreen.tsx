@@ -2,7 +2,7 @@
  * This is the screen where the player can review pending residency applications and choose to approve one.
  */
 import React, { FC } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ScreenType } from './BaseScreen';
 import { Stage } from '../Stage';
 import { SkitType } from '../Skit';
@@ -26,6 +26,33 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 	const [selectedSlotIndex, setSelectedSlotIndex] = React.useState<number | null>(null);
 	const [expandedCandidateId, setExpandedCandidateId] = React.useState<string | null>(null);
 	const [refreshKey, setRefreshKey] = React.useState(0); // Force re-renders when data changes
+	// Residency application viewer/editor: which applicant's paperwork is open, the in-progress edits,
+	// and the offset from viewport center to the source slot (so the panel grows from / shrinks back into it).
+	const [applicationActor, setApplicationActor] = React.useState<Actor | null>(null);
+	const [appEdits, setAppEdits] = React.useState<{ description: string; profile: string; homeworld: string } | null>(null);
+	const [appOffset, setAppOffset] = React.useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+	const openApplication = (actor: Actor, e: React.MouseEvent) => {
+		e.stopPropagation();
+		const slotRect = (e.currentTarget as HTMLElement).parentElement?.getBoundingClientRect();
+		setAppOffset(slotRect
+			? { x: slotRect.left + slotRect.width / 2 - window.innerWidth / 2, y: slotRect.top + slotRect.height / 2 - window.innerHeight / 2 }
+			: { x: 0, y: 0 });
+		setAppEdits({ description: actor.getDescription() || '', profile: actor.profile || '', homeworld: actor.homeworld || '' });
+		setApplicationActor(actor);
+	};
+
+	const closeApplication = () => {
+		if (applicationActor && appEdits) {
+			applicationActor.setDescription(appEdits.description);
+			applicationActor.profile = appEdits.profile;
+			applicationActor.homeworld = appEdits.homeworld.trim();
+			stage().saveGame();
+			setRefreshKey(k => k + 1);
+		}
+		setApplicationActor(null);
+		setAppEdits(null);
+	};
 	const [selectedReserveActorId, setSelectedReserveActorId] = React.useState<string | null>(null); // For tap-to-select on mobile
 	const reserveActors = stage().getSave().reserveActors || [];
 	const echoSlots = stage().getEchoSlots();
@@ -408,6 +435,30 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 											zIndex: 2
 										}}
 									/>
+								{/* Review application (magnifying glass) */}
+								<motion.button
+									onClick={(e) => openApplication(actor, e)}
+									whileHover={{ scale: 1.15 }}
+									whileTap={{ scale: 0.95 }}
+									title="Review application"
+									style={{
+										position: 'absolute',
+										bottom: 8,
+										right: 8,
+										zIndex: 3,
+										width: 34,
+										height: 34,
+										borderRadius: '50%',
+										border: `2px solid ${actor.themeColor || '#b066ff'}`,
+										background: 'rgba(10, 4, 20, 0.85)',
+										color: '#e0f0ff',
+										fontSize: 16,
+										cursor: 'pointer',
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'center',
+									}}
+								>🔍</motion.button>
 								{/* Stats */}
 								<div className="stat-list" style={{ padding: 'clamp(6px, 1vmin, 10px) clamp(8px, 1.5vmin, 14px)', background: 'rgba(0,0,0,0.8)', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', position: 'relative', zIndex: 2 }}>
 										{Object.values(Stat).map((stat) => {
@@ -455,7 +506,7 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 						}}
 					>
 						{availableRooms.length === 0 
-							? 'No Available Quarters' 
+							? 'No Available Homes' 
 							: selectedActor 
 								? (!selectedActor.isPrimaryImageReady ? 'Still Taking Form' : !(selectedActor.homeworld || '').trim() ? 'World of Origin Required' : 'Approve Residency')
 								: 'Select an Applicant'
@@ -482,7 +533,7 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 							}}
 						>
 							{availableRooms.length === 0 
-								? 'No Available Quarters' 
+								? 'No Available Homes' 
 								: selectedActor 
 									? (!selectedActor.isPrimaryImageReady ? 'Still Taking Form' : !(selectedActor.homeworld || '').trim() ? 'World of Origin Required' : 'Approve Residency')
 									: 'Select an Applicant'
@@ -492,6 +543,107 @@ export const EchoScreen: FC<EchoScreenProps> = ({stage, setScreenType, isVertica
 				)}
 			</div>
 			</div>
+			{/* Residency application viewer/editor */}
+			<AnimatePresence>
+				{applicationActor && appEdits && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						onClick={closeApplication}
+						style={{
+							position: 'fixed',
+							inset: 0,
+							zIndex: 2000,
+							background: 'rgba(5, 0, 15, 0.75)',
+							backdropFilter: 'blur(6px)',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+						}}
+					>
+						<motion.div
+							initial={{ opacity: 0, scale: 0.15, x: appOffset.x, y: appOffset.y }}
+							animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+							exit={{ opacity: 0, scale: 0.15, x: appOffset.x, y: appOffset.y }}
+							transition={{ type: 'spring', stiffness: 260, damping: 26 }}
+							onClick={(e) => e.stopPropagation()}
+							style={{
+								width: 'min(720px, 92vw)',
+								maxHeight: '90vh',
+								overflowY: 'auto',
+								background: 'linear-gradient(180deg, rgba(24, 10, 40, 0.98), rgba(14, 6, 26, 0.98))',
+								border: `3px solid ${applicationActor.themeColor || '#b066ff'}`,
+								borderRadius: 14,
+								boxShadow: '0 20px 60px rgba(0, 0, 0, 0.6)',
+								padding: 'clamp(14px, 2.5vmin, 26px)',
+							}}
+						>
+							<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+								<div>
+									<div style={{ color: '#b066ff', fontSize: 13, fontWeight: 'bold', letterSpacing: 1, textTransform: 'uppercase' }}>Application for Residency</div>
+									<div style={{ color: '#e0f0ff', fontSize: 22, fontWeight: 'bold' }}>{applicationActor.name}</div>
+								</div>
+								<button
+									onClick={closeApplication}
+									title="Save and close"
+									style={{ background: 'transparent', border: 'none', color: '#9aa0a6', fontSize: 26, cursor: 'pointer', lineHeight: 1 }}
+								>×</button>
+							</div>
+							{applicationActor.isPrimaryImageReady ? (
+								<img
+									src={applicationActor.getEmotionImage('neutral', stage())}
+									alt={applicationActor.name}
+									style={{ display: 'block', margin: '0 auto 16px', maxWidth: '100%', maxHeight: '38vh', borderRadius: 10, border: `2px solid ${applicationActor.themeColor || '#b066ff'}` }}
+								/>
+							) : (
+								<div style={{ margin: '0 auto 16px', height: '20vh', borderRadius: 10, background: `linear-gradient(135deg, ${applicationActor.themeColor || '#b066ff'}30, rgba(0,0,0,0.4))`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9aa0a6' }}>Portrait still taking form...</div>
+							)}
+							{([
+								{ key: 'description' as const, label: 'Description', minHeight: 120, placeholder: 'Physical description and presentation' },
+								{ key: 'profile' as const, label: 'Personality Profile', minHeight: 100, placeholder: 'Key personality traits and behaviors' },
+								{ key: 'homeworld' as const, label: 'World of Origin (required)', minHeight: 80, placeholder: "Name the origin setting (or 'Original'), plus a brief synopsis of that world" },
+							]).map(field => (
+								<div key={field.key} style={{ marginBottom: 14 }}>
+									<label style={{ display: 'block', color: '#b066ff', fontSize: 14, fontWeight: 'bold', marginBottom: 6 }}>{field.label}</label>
+									<textarea
+										value={appEdits[field.key]}
+										onChange={(e) => setAppEdits(prev => prev ? { ...prev, [field.key]: e.target.value } : prev)}
+										placeholder={field.placeholder}
+										style={{
+											width: '100%',
+											minHeight: field.minHeight,
+											padding: 12,
+											fontSize: 14,
+											backgroundColor: 'rgba(18, 8, 32, 0.6)',
+											border: field.key === 'homeworld' && !appEdits.homeworld.trim() ? '2px solid rgba(255, 120, 120, 0.55)' : '2px solid rgba(176, 102, 255, 0.3)',
+											borderRadius: 5,
+											color: '#e0f0ff',
+											fontFamily: 'inherit',
+											resize: 'vertical',
+										}}
+									/>
+								</div>
+							))}
+							<button
+								onClick={closeApplication}
+								style={{
+									display: 'block',
+									margin: '4px auto 0',
+									padding: '10px 28px',
+									fontSize: 15,
+									fontWeight: 'bold',
+									background: 'var(--color-primary)',
+									color: '#1a0533',
+									border: 'none',
+									borderRadius: 8,
+									cursor: 'pointer',
+								}}
+							>File Application</button>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</BlurredBackground>
 	);
 }
